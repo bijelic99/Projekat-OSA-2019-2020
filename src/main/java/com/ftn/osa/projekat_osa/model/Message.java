@@ -1,25 +1,56 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "MESSAGES")
 public class Message extends FolderElement {
+
+    @OneToOne
+    @MapsId
     private Account account;
+
+    @OneToOne
+    @MapsId
     private Contact from;
-    private List<Contact> to;
-    private List<Contact> cc;
-    private List<Contact> bcc;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Contact> to;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Contact> cc;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Contact> bcc;
+
+    @Column
     private LocalDateTime dateTime;
+
+    @Column
     private String subject;
+
+    @Column
     private String content;
-    private List<Attachment> attachments;
-    private List<Tag> tags;
+
+    @OneToMany
+    private Set<Attachment> attachments = new HashSet<>();
+
+    @ManyToMany
+    private Set<Tag> tags = new HashSet<>();
+
+    @Column
+    private Boolean read;
 
     public Message(){
-        this(null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null, null, null);
+        read = false;
     }
 
-    public Message(Integer id, Folder parentFolder, Account account, Contact from, List<Contact> to, List<Contact> cc, List<Contact> bcc, LocalDateTime dateTime, String subject, String content) {
+    public Message(Integer id, Folder parentFolder, Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Set<Tag> tags, Boolean read) {
         super(id, parentFolder);
         this.account = account;
         this.from = from;
@@ -29,9 +60,11 @@ public class Message extends FolderElement {
         this.dateTime = dateTime;
         this.subject = subject;
         this.content = content;
+        this.tags = tags;
+        this.read = read;
     }
 
-    public Message(Account account, Contact from, List<Contact> to, List<Contact> cc, List<Contact> bcc, LocalDateTime dateTime, String subject, String content) {
+    public Message(Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Boolean read) {
         super(null, null);
         this.account = account;
         this.from = from;
@@ -41,6 +74,7 @@ public class Message extends FolderElement {
         this.dateTime = dateTime;
         this.subject = subject;
         this.content = content;
+        this.read = read;
     }
 
     public Account getAccount() {
@@ -59,27 +93,27 @@ public class Message extends FolderElement {
         this.from = from;
     }
 
-    public List<Contact> getTo() {
+    public Set<Contact> getTo() {
         return to;
     }
 
-    public void setTo(List<Contact> to) {
+    public void setTo(Set<Contact> to) {
         this.to = to;
     }
 
-    public List<Contact> getCc() {
+    public Set<Contact> getCc() {
         return cc;
     }
 
-    public void setCc(List<Contact> cc) {
+    public void setCc(Set<Contact> cc) {
         this.cc = cc;
     }
 
-    public List<Contact> getBcc() {
+    public Set<Contact> getBcc() {
         return bcc;
     }
 
-    public void setBcc(List<Contact> bcc) {
+    public void setBcc(Set<Contact> bcc) {
         this.bcc = bcc;
     }
 
@@ -107,19 +141,19 @@ public class Message extends FolderElement {
         this.content = content;
     }
 
-    public List<Attachment> getAttachments() {
+    public Set<Attachment> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<Attachment> attachments) {
+    public void setAttachments(Set<Attachment> attachments) {
         this.attachments = attachments;
     }
 
-    public List<Tag> getTags() {
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
 }

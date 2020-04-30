@@ -1,8 +1,17 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "TAGS")
 public class Tag extends Identifiable {
+    @Column
     private String name;
+    @Column
     private String color;
+    @Column
     private String textColor;
 
     public Tag(Integer id, String name) {

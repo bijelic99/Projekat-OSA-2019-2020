@@ -1,11 +1,30 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "CONTACTS")
 public class Contact extends Identifiable {
+
+    @Column
     private String firstName;
+
+    @Column
     private String lastName;
+
+    @Column
     private String displayName;
+
+    @Column
     private String email;
+
+    @OneToOne
     private Photo photo;
+
+    @Column
     private String format;
 
     public Contact(Integer id, String firstName, String lastName, String displayName, String email, Photo photo, String format) {

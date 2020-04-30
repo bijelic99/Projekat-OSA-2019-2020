@@ -1,6 +1,15 @@
 package com.ftn.osa.projekat_osa.model;
 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "PHOTOS")
 public class Photo extends Identifiable {
+
+    @Column
     private String base64Photo;
 
     public Photo(Integer id, String base64Photo) {

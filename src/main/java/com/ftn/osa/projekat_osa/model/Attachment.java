@@ -1,9 +1,23 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "ATTACHMENTS")
 public class Attachment extends Identifiable {
+
+    @Column
     private String base64Data;
+
+    @Column
     private String type;
+
+    @Column
     private String name;
+
+
     public Attachment(){
         this(null,null,null,null);
     }

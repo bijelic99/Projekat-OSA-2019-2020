@@ -1,6 +1,13 @@
 package com.ftn.osa.projekat_osa.model;
 
-public abstract class Identifiable {
+import javax.persistence.*;
+import java.io.Serializable;
+
+@MappedSuperclass
+public abstract class Identifiable implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     protected Integer id;
 
     public Identifiable() {
@@ -17,5 +24,10 @@ public abstract class Identifiable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getId() == ((Identifiable)obj).getId();
     }
 }
