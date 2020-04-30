@@ -14,7 +14,7 @@ public class Folder extends FolderElement {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentFolder")
     private Set<Folder> folders;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "parentFolder")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Message> messages;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

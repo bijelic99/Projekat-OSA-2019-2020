@@ -8,29 +8,29 @@ import java.util.Set;
 
 @Entity
 @Table(name = "MESSAGES")
-public class Message extends FolderElement {
+public class Message extends Identifiable {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     private Account account;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     private Contact from;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Contact> to;
+    private Set<Contact> to = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Contact> cc;
+    private Set<Contact> cc = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Contact> bcc;
+    private Set<Contact> bcc = new HashSet<>();
 
     @Column
     private LocalDateTime dateTime;
 
-    @Column
+    @Column(name = "_subject")
     private String subject;
 
     @Column
@@ -42,16 +42,16 @@ public class Message extends FolderElement {
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
 
-    @Column
+    @Column(name = "_read")
     private Boolean read;
 
     public Message(){
-        this(null, null, null, null, null, null, null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null, null, null, null);
         read = false;
     }
 
-    public Message(Integer id, Folder parentFolder, Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Set<Tag> tags, Boolean read) {
-        super(id, parentFolder);
+    public Message(Integer id, Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Set<Tag> tags, Boolean read) {
+        super(id);
         this.account = account;
         this.from = from;
         this.to = to;
@@ -65,7 +65,7 @@ public class Message extends FolderElement {
     }
 
     public Message(Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Boolean read) {
-        super(null, null);
+        super(null);
         this.account = account;
         this.from = from;
         this.to = to;

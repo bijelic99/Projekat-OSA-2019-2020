@@ -7,15 +7,17 @@ import javax.persistence.*;
 public class Rule extends Identifiable {
 
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "_condition")
     private Condition condition;
 
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "operation")
     private Operation operation;
 
-    @OneToOne()
+    @OneToOne(fetch = FetchType.LAZY)
     private Folder destinationFolder;
 
-    @Column
+    @Column(name = "_value")
     private String value;
 
     public Rule(){
