@@ -11,11 +11,9 @@ import java.util.Set;
 public class Message extends Identifiable {
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     private Account account;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     private Contact from;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -46,8 +44,7 @@ public class Message extends Identifiable {
     private Boolean read;
 
     public Message(){
-        this(null, null, null, null, null, null, null, null, null, null, null);
-        read = false;
+        this(null, null, null, null, null, null, null, null, null, null, false);
     }
 
     public Message(Integer id, Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Set<Tag> tags, Boolean read) {
@@ -61,19 +58,6 @@ public class Message extends Identifiable {
         this.subject = subject;
         this.content = content;
         this.tags = tags;
-        this.read = read;
-    }
-
-    public Message(Account account, Contact from, Set<Contact> to, Set<Contact> cc, Set<Contact> bcc, LocalDateTime dateTime, String subject, String content, Boolean read) {
-        super(null);
-        this.account = account;
-        this.from = from;
-        this.to = to;
-        this.cc = cc;
-        this.bcc = bcc;
-        this.dateTime = dateTime;
-        this.subject = subject;
-        this.content = content;
         this.read = read;
     }
 
