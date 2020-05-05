@@ -1,6 +1,13 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "photos")
 public class Photo extends Identifiable {
+    @Column(nullable = false)
     private String path;
 
     public Photo(Long id, String path) {

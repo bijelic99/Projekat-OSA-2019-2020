@@ -1,12 +1,18 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-
+@Entity
+@Table(name = "folders")
 public class Folder extends Identifiable {
+    @Column(nullable = false)
     private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Folder parentFolder;
+    @OneToMany(fetch = FetchType.LAZY)
     private Set<Message> messages;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentFolder")
     private Set<Folder> folders;
 
     public Folder(Long id, String name, Folder parentFolder, Set<Message> messages, Set<Folder> folders) {

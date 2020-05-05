@@ -1,10 +1,13 @@
 package com.ftn.osa.projekat_osa.model;
 
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @MappedSuperclass
 public abstract class Identifiable implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     public Identifiable(Long id) {

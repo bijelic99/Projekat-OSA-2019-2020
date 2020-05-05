@@ -1,21 +1,33 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "messages")
 public class Message extends Identifiable{
+    @Column(name = "_from", nullable = false)
     private String from;
+    @Column(name = "_to", nullable = false)
     private String to;
+    @Column
     private String cc;
+    @Column
     private String bcc;
+    @Column(name = "date_time", columnDefinition = "datetime default now()")
     private LocalDateTime dateTime;
+    @OneToMany(fetch = FetchType.EAGER)
     private Set<Tag> tags;
+    @Column
     private String subject;
+    @Column
     private String content;
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Attachment> attachments;
     private boolean unread;
-
+    @ManyToOne(fetch = FetchType.EAGER)
     private Account account;
 
     public Message(Long id, String from, String to, String cc, String bcc, LocalDateTime dateTime, String subject, String content, boolean unread, Set<Tag> tags, Set<Attachment> attachments, Account account) {

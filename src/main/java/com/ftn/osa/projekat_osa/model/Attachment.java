@@ -1,16 +1,24 @@
 package com.ftn.osa.projekat_osa.model;
 
-import java.util.Base64;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "attachments")
 public class Attachment extends Identifiable {
-    private Base64 data;
-    private String mime_type;
+
+    @Column(nullable = false)
+    private String data;
+    @Column(nullable = false)
+    private String mimeType;
+    @Column(nullable = false)
     private String name;
 
-    public Attachment(Long id, Base64 data, String mime_type, String name) {
+    public Attachment(Long id, String data, String mimeType, String name) {
         super(id);
         this.data = data;
-        this.mime_type = mime_type;
+        this.mimeType = mimeType;
         this.name = name;
     }
 
@@ -18,20 +26,20 @@ public class Attachment extends Identifiable {
 
     }
 
-    public Base64 getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(Base64 data) {
+    public void setData(String data) {
         this.data = data;
     }
 
     public String getMime_type() {
-        return mime_type;
+        return mimeType;
     }
 
-    public void setMime_type(String mime_type) {
-        this.mime_type = mime_type;
+    public void setMime_type(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     public String getName() {

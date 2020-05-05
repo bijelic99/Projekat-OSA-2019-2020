@@ -1,6 +1,13 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "tags")
 public class Tag extends Identifiable {
+    @Column(nullable = false)
     private String name;
 
     public Tag(Long id, String name) {

@@ -1,9 +1,18 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "rules")
 public class Rule extends Identifiable {
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "_condition")
     private  Condition condition;
+    @Column
     private String value;
+    @Enumerated(EnumType.ORDINAL)
     private Operation operation;
+    @ManyToOne
     private Folder destinationFolder;
 
     public Rule(Long id, Condition condition, String value, Operation operation, Folder destinationFolder) {

@@ -1,17 +1,30 @@
 package com.ftn.osa.projekat_osa.model;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "accounts")
 public class Account extends Identifiable {
+    @Column(name = "smtp_address", nullable = false)
     private String smtpAddress;
+    @Column(name = "smtp_port", nullable = false)
     private String smtpPort;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "in_server_type", nullable = false)
     private InServerType inServerType;
+    @Column(name = "in_server_address", nullable = false)
     private String inServerAddress;
+    @Column(name = "in_server_port", nullable = false)
     private Integer inServerPort;
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(name = "display_name")
     private String displayName;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Folder> accountFolders;
 
     public Account(Long id, String smtpAddress, String smtpPort, InServerType inServerType, String inServerAddress, Integer inServerPort, String username, String password, String displayName, Set<Folder> accountFolders) {
