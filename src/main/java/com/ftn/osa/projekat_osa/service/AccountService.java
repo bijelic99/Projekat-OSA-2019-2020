@@ -6,7 +6,7 @@ import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class AccountService implements AccountServiceInterface {
@@ -15,7 +15,23 @@ public class AccountService implements AccountServiceInterface {
     AccountRepository accountRepository;
 
     @Override
-    public Set<Account> getAll() {
-        accountRepository.findAll();
+    public List<Account> getAll() {
+		return accountRepository.findAll();
     }
+
+	@Override
+	public Account getOne(Long accountId) {
+		return accountRepository.getOne(accountId);
+	}
+
+	@Override
+	public Account save(Account account) {
+		return accountRepository.save(account);
+	}
+
+	@Override
+	public void remove(Long accountId) {
+		accountRepository.deleteById(accountId);
+	}
+	
 }
