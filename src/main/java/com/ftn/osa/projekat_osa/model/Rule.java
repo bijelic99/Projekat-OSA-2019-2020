@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "rules")
-public class Rule extends Identifiable {
+public class Rule extends JpaEntity {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "_condition")
     private  Condition condition;

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 @Entity
 @Table(name = "folders")
-public class Folder extends Identifiable {
+public class Folder extends JpaEntity {
     @Column(nullable = false)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)

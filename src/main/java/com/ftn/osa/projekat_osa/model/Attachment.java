@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "attachments")
-public class Attachment extends Identifiable {
+public class Attachment extends JpaEntity {
 
     @Column(nullable = false)
     private String data;
