@@ -6,6 +6,7 @@ import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -16,6 +17,6 @@ public class AccountService implements AccountServiceInterface {
 
     @Override
     public Set<Account> getAll() {
-        accountRepository.findAll();
+        return new HashSet<>(accountRepository.findAll());
     }
 }
