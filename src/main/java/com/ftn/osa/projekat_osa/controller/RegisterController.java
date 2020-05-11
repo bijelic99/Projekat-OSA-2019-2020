@@ -18,7 +18,7 @@ public class RegisterController {
 
     @PostMapping(consumes = "application/json")
     public Optional<User> register(){
-        
+
     }
 
 }
