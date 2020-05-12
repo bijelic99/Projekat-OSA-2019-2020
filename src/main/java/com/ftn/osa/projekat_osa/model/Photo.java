@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "photos")
-public class Photo extends Identifiable {
+public class Photo extends JpaEntity {
     @Column(nullable = false)
     private String path;
 

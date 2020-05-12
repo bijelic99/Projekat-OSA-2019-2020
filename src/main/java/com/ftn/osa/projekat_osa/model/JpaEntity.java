@@ -4,17 +4,17 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class Identifiable implements Serializable {
+public abstract class JpaEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    public Identifiable(Long id) {
+    public JpaEntity(Long id) {
         this.id = id;
     }
 
-    public Identifiable() {
+    public JpaEntity() {
         this.id = null;
     }
 
@@ -28,6 +28,6 @@ public abstract class Identifiable implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return this.getClass() == obj.getClass() && this.getId() == ((Identifiable)obj).getId();
+        return this.getClass() == obj.getClass() && this.getId() == ((JpaEntity)obj).getId();
     }
 }

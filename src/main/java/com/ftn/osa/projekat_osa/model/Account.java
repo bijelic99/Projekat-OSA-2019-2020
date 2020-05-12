@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "accounts")
-public class Account extends Identifiable {
+public class Account extends JpaEntity {
     @Column(name = "smtp_address", nullable = false)
     private String smtpAddress;
     @Column(name = "smtp_port", nullable = false)
