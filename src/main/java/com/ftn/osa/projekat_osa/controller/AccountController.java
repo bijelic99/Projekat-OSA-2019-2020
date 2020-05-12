@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ftn.osa.projekat_osa.dto.AccountDTO;
+import com.ftn.osa.projekat_osa.android_dto.AccountDTO;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface;
 
@@ -48,15 +48,7 @@ public class AccountController {
 	
 	@PostMapping(consumes="application/json")
 	public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO){
-		Account account = new Account();
-		account.setSmtpAddress(accountDTO.getSmtpAddress());
-		account.setSmtpPort(accountDTO.getSmtpPort());
-		account.setInServerType(accountDTO.getInServerType());
-		account.setInServerAddress(accountDTO.getInServerAddress());
-		account.setInServerPort(accountDTO.getInServerPort());
-		account.setUsername(accountDTO.getUsername());
-		account.setPassword(accountDTO.getPassword());
-		account.setDisplayName(accountDTO.getDisplayName());
+		Account account = accountDTO.getJpaEntity();
 		
 		account = accountService.save(account);
 		return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.CREATED);
@@ -69,15 +61,17 @@ public class AccountController {
 		if(account == null) {
 			return new ResponseEntity<AccountDTO>(HttpStatus.BAD_REQUEST);
 		}
-		
-		account.setSmtpAddress(accountDTO.getSmtpAddress());
-		account.setSmtpPort(accountDTO.getSmtpPort());
-		account.setInServerType(accountDTO.getInServerType());
-		account.setInServerAddress(accountDTO.getInServerAddress());
-		account.setInServerPort(accountDTO.getInServerPort());
-		account.setUsername(accountDTO.getUsername());
-		account.setPassword(accountDTO.getPassword());
-		account.setDisplayName(accountDTO.getDisplayName());
+
+		Account jpaEntityFromDto = accountDTO.getJpaEntity();
+
+		account.setSmtpAddress(jpaEntityFromDto.getSmtpAddress());
+		account.setSmtpPort(jpaEntityFromDto.getSmtpPort());
+		account.setInServerType(jpaEntityFromDto.getInServerType());
+		account.setInServerAddress(jpaEntityFromDto.getInServerAddress());
+		account.setInServerPort(jpaEntityFromDto.getInServerPort());
+		account.setUsername(jpaEntityFromDto.getUsername());
+		account.setPassword(jpaEntityFromDto.getPassword());
+		account.setDisplayName(jpaEntityFromDto.getDisplayName());
 		
 		account = accountService.save(account);
 		
