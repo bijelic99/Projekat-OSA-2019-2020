@@ -1,11 +1,13 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.ftn.osa.projekat_osa.model.Tag;
 
-public class TagDTO extends DtoObject<com.ftn.osa.projekat_osa.model.Tag> {
+public class TagDTO extends DtoObject<Tag> {
+	
     private Long id;
     private String name;
 
-    public TagDTO(com.ftn.osa.projekat_osa.model.Tag entity) {
+    public TagDTO(Tag entity) {
         this.id = entity.getId();
         this.name = entity.getName();
     }
@@ -62,7 +64,7 @@ public class TagDTO extends DtoObject<com.ftn.osa.projekat_osa.model.Tag> {
 
 
     @Override
-    public com.ftn.osa.projekat_osa.model.Tag getJpaEntity() {
-        return new com.ftn.osa.projekat_osa.model.Tag(this.getId(), this.getName());
+    public Tag getJpaEntity() {
+        return new Tag(getId(), getName());
     }
 }
