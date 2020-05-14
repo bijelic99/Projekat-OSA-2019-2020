@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "messages")
-public class Message extends Identifiable{
+public class Message extends JpaEntity {
     @Column(name = "_from", nullable = false)
     private String from;
     @Column(name = "_to", nullable = false)

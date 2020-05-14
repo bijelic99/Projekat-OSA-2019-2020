@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -16,7 +17,23 @@ public class AccountService implements AccountServiceInterface {
     AccountRepository accountRepository;
 
     @Override
-    public Set<Account> getAll() {
-        return new HashSet<>(accountRepository.findAll());
+    public List<Account> getAll() {
+        return accountRepository.findAll();
     }
+
+	@Override
+	public Account getOne(Long accountId) {
+		return accountRepository.getOne(accountId);
+	}
+
+	@Override
+	public Account save(Account account) {
+		return accountRepository.save(account);
+	}
+
+	@Override
+	public void remove(Long accountId) {
+		accountRepository.deleteById(accountId);
+	}
+	
 }

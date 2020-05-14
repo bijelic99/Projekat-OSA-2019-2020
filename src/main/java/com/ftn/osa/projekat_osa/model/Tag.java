@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tags")
-public class Tag extends Identifiable {
+public class Tag extends JpaEntity {
     @Column(nullable = false)
     private String name;
 

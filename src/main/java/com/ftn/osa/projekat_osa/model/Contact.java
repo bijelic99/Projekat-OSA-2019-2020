@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "contacts")
-public class Contact extends Identifiable {
+public class Contact extends JpaEntity {
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
