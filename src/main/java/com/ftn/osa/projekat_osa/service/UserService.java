@@ -17,7 +17,11 @@ public class UserService implements UserServiceInterface {
     @Override
     public Optional<User> registerUser(User user) {
         try {
-            return Optional.of(userRepository.save(user));
+            if (!userRepository.findUserByUsername(user.getUsername()).isPresent()) {
+                return Optional.of(userRepository.save(user));
+            } else {
+                return Optional.empty();
+            }
         }
         catch (Exception e){
             e.printStackTrace();
