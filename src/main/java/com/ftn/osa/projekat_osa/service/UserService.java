@@ -9,6 +9,7 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -44,6 +45,20 @@ public class UserService implements UserServiceInterface {
                 return Optional.of(userRepository.save(user));
             }
             else throw new WrongPasswordException();
+        }
+        else throw new ResourceNotFoundException("User not found");
+    }
+
+    @Override
+    public Optional<User> updateUser(Long userId, Map<String, String> newValues) throws ResourceNotFoundException {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            if(newValues.containsKey("firstName")) user.setFirstName(newValues.get("firstName"));
+
+            if(newValues.containsKey("lastName")) user.setLastName(newValues.get("lastName"));
+
+            return Optional.of(userRepository.save(user));
         }
         else throw new ResourceNotFoundException("User not found");
     }
