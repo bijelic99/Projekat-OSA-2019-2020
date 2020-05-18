@@ -15,3 +15,34 @@ INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SER
 INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(1, 1);
 INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(2, 2);
 
+INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(1, 'folder1', null);
+INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(2, 'folder2', 1);
+
+INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUES(1, 'displayName', 'email@gmail.com', 'first name', 'last name', 'note');
+INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUES(2, 'displayName1', 'email1@gmail.com', 'first name1', 'last name1', 'note1');
+
+--INSERT INTO messages(id, bcc, cc, content, _form, subject, _to, unread, account_id) VALUES(1, 'bcc', 'cc', 'new content', null, 'subject1', 'to1', 'true', 1);
+--INSERT INTO messages(id, bcc, cc, content, _form, subject, _to, unread, account_id) VALUES(2, 'bcc1', 'cc1', 'new content1', null, 'subject2', 'to2', 'true', 2;
+
+INSERT INTO attachments(id, data, mime_type, name) VALUES(1, 'data1', 'mime type1', 'name1');
+INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type2', 'name2');
+
+INSERT INTO accounts_account_folders(account_id, account_folders_id) VALUES(1,1);
+
+--INSERT INTO contacts_contact_photos(contact_id, contact_photos_id) VALUE(1, null);
+
+--INSERT INTO folders_messages(folder_id, messages_id) VALUES(1,1);
+
+--INSERT INTO messages_attachments(message_id, attachments_id) VALUES(1,1);
+--INSERT INTO messages_attachments(message_id, attachments_id) VALUES(2,2);
+
+--INSERT INTO messages_tags(message_id, tags_id) VALUES(1,3);
+--INSERT INTO messages_tags(message_id, tags_id) VALUES(2,4);
+
+INSERT INTO rules(id, _condition, operation, value, destination_folder_id) VALUES(1, 1, 2, 'value1', 1);
+
+INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(1, 1);
+INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(2, 2);
+
+INSERT INTO users_user_tags(user_id, user_tags_id) VALUES(1, 2);
+INSERT INTO users_user_tags(user_id, user_tags_id) VALUES(2, 1); 
