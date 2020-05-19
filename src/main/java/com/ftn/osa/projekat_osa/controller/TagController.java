@@ -48,7 +48,7 @@ public class TagController {
 	}
 	
 	
-	@PostMapping("application/json")
+	@PostMapping(consumes="application/json")
 	public ResponseEntity<TagDTO> saveTag(@RequestBody TagDTO tagDTO){
 		Tag tag = tagDTO.getJpaEntity();
 		
