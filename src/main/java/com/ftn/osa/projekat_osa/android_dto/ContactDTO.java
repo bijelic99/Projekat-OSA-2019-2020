@@ -40,10 +40,11 @@ public class ContactDTO extends DtoObject<Contact> {
         this.display = entity.getDisplayName();
         this.email = entity.getEmail();
         this.format = entity.getNote();
-        if (entity.getContactPhotos() != null){
+        if (entity.getContactPhotos() != null && entity.getContactPhotos().size() > 0){
             Photo p = entity.getContactPhotos().stream().max(Comparator.comparing(JpaEntity::getId)).get();
             this.photo = new PhotoDTO(p);
         }
+        else this.photo = null;
 
     }
 
@@ -105,9 +106,8 @@ public class ContactDTO extends DtoObject<Contact> {
 
     @Override
     public Contact getJpaEntity() {
-        Set<Photo> photoSet = null;
+        Set<Photo> photoSet = new HashSet<>();
         if(getPhoto() != null ){
-            photoSet = new HashSet<>();
             photoSet.add(getPhoto().getJpaEntity());
         }
         return new Contact(getId(), getFirst(), getLast(), getDisplay(), getEmail(), getFormat(), photoSet);
