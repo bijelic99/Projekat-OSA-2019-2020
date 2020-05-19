@@ -1,6 +1,5 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
-import com.ftn.osa.projekat_osa.model.Attachment;
 import com.ftn.osa.projekat_osa.model.Message;
 
 import java.time.LocalDateTime;

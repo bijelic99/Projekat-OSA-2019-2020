@@ -1,0 +1,5 @@
+2020-05-18 19:43:55,749 [INFO] – New user with username of test successfully registered 
+2020-05-18 19:44:04,231 [ERROR] – User failed to register
+2020-05-18 19:45:32,188 [WARN] – User with id of 3 tried to change the password with wrong current password
+2020-05-18 19:45:56,220 [INFO] – User with id of 3 successfully changed his password
+2020-05-18 19:46:32,013 [INFO] – User with id of 3 successfully updated his profile
