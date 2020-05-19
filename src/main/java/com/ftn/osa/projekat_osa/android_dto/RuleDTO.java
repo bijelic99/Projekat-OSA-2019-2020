@@ -27,7 +27,7 @@ public class RuleDTO extends DtoObject<Rule> {
         this.id = entity.getId();
         this.condition = entity.getCondition().name();
         this.operation = entity.getOperation().name();
-        this.destination = new FolderDTO(entity.getDestinationFolder());
+        this.destination = entity.getDestinationFolder() != null ? new FolderDTO(entity.getDestinationFolder()) : null;
         this.value = entity.getValue();
     }
 

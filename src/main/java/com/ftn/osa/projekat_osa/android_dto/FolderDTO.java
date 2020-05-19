@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ftn.osa.projekat_osa.model.Folder;
 
 import java.util.HashSet;
@@ -27,11 +28,13 @@ public class FolderDTO extends DtoObject<Folder> {
     }
 
     public FolderDTO(Folder entity) {
-        this.id = entity.getId();
+        this.id = entity.getId() != null ? entity.getId() : 0;
         this.name = entity.getName();
-        this.parentFolder = new FolderDTO(entity.getParentFolder());
-        this.folders = entity.getFolders().stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
-        this.messages = entity.getMessages().stream().map(message -> new MessageDTO(message)).collect(Collectors.toSet());
+        this.parentFolder = entity.getParentFolder() != null ? new FolderDTO(entity.getParentFolder()) : null;
+        this.folders = entity.getFolders().size() > 0 ?
+                entity.getFolders().stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet()) : null;
+        this.messages = entity.getMessages().size() > 0 ?
+                entity.getMessages().stream().map(message -> new MessageDTO(message)).collect(Collectors.toSet()) : null;
     }
 
     public Long getId() {
@@ -50,6 +53,7 @@ public class FolderDTO extends DtoObject<Folder> {
         this.name = name;
     }
 
+
     public Set<FolderDTO> getFolders() {
         return folders;
     }
@@ -66,6 +70,7 @@ public class FolderDTO extends DtoObject<Folder> {
         this.messages = messages;
     }
 
+    @JsonIgnore
     public FolderDTO getParentFolder() {
         return parentFolder;
     }
