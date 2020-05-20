@@ -2,14 +2,15 @@ package com.ftn.osa.projekat_osa.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.ftn.osa.projekat_osa.android_dto.TagDTO;
+import com.ftn.osa.projekat_osa.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.model.Message;
@@ -40,5 +41,16 @@ public class MessageController {
 			return new ResponseEntity<MessageDTO>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<MessageDTO>(new MessageDTO(message), HttpStatus.OK);
+	}
+
+	@PutMapping(value = "/{messageId}/tags")
+	public ResponseEntity<Object> putMessageTag(@PathVariable("messageId") Long id, @RequestBody Set<TagDTO> tags){
+		try {
+			Set<Tag> allMessageTags = messageService.addTags(id, tags.stream().map(tagDTO -> tagDTO.getJpaEntity()).collect(Collectors.toSet()));
+			return new ResponseEntity<>(allMessageTags.stream().map(tag -> new TagDTO(tag)).collect(Collectors.toSet()), HttpStatus.OK);
+		}
+		catch (NullPointerException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
 	}
 }

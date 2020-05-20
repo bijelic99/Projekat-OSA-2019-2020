@@ -21,8 +21,8 @@ INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(2, 'folder2', 1);
 INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUES(1, 'displayName', 'email@gmail.com', 'first name', 'last name', 'note');
 INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUES(2, 'displayName1', 'email1@gmail.com', 'first name1', 'last name1', 'note1');
 
---INSERT INTO messages(id, bcc, cc, content, _form, subject, _to, unread, account_id) VALUES(1, 'bcc', 'cc', 'new content', null, 'subject1', 'to1', 'true', 1);
---INSERT INTO messages(id, bcc, cc, content, _form, subject, _to, unread, account_id) VALUES(2, 'bcc1', 'cc1', 'new content1', null, 'subject2', 'to2', 'true', 2;
+INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(1, 'bcc', 'cc', 'new content', "from", 'subject1', 'to1', 0, 1);
+INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(2, 'bcc1', 'cc1', 'new content1', "from", 'subject2', 'to2', 1, 2);
 
 INSERT INTO attachments(id, data, mime_type, name) VALUES(1, 'data1', 'mime type1', 'name1');
 INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type2', 'name2');
