@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Message;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class MessageDTO extends DtoObject<Message> {
     private Long id;
-    private AccountDTO account;
+    private Long account;
     private ContactDTO from;
     private Set<ContactDTO> to;
     private Set<ContactDTO> cc;
@@ -30,7 +31,7 @@ public class MessageDTO extends DtoObject<Message> {
         this.tags = new HashSet<>();
     }
 
-    public MessageDTO(Long id, AccountDTO account, ContactDTO from, Set<ContactDTO> to, Set<ContactDTO> cc, Set<ContactDTO> bcc, LocalDateTime dateTime, String subject, String content, Set<AttachmentDTO> attachments, Set<TagDTO> tags, Boolean unread) {
+    public MessageDTO(Long id, Long account, ContactDTO from, Set<ContactDTO> to, Set<ContactDTO> cc, Set<ContactDTO> bcc, LocalDateTime dateTime, String subject, String content, Set<AttachmentDTO> attachments, Set<TagDTO> tags, Boolean unread) {
         this.id = id;
         this.account = account;
         this.from = from;
@@ -47,7 +48,7 @@ public class MessageDTO extends DtoObject<Message> {
 
     public MessageDTO(Message entity) {
         this.id = entity.getId();
-        this.account = new AccountDTO(entity.getAccount());
+        this.account = entity.getAccount().getId();
         ContactDTO c = new ContactDTO();
         c.setEmail(entity.getFrom());
         this.from = c;
@@ -83,11 +84,11 @@ public class MessageDTO extends DtoObject<Message> {
         this.id = id;
     }
 
-    public AccountDTO getAccount() {
+    public Long getAccount() {
         return account;
     }
 
-    public void setAccount(AccountDTO account) {
+    public void setAccount(Long account) {
         this.account = account;
     }
 
@@ -183,7 +184,8 @@ public class MessageDTO extends DtoObject<Message> {
                 getUnread(),
                 getTags().stream().map(tagDTO -> tagDTO.getJpaEntity()).collect(Collectors.toSet()),
                 getAttachments().stream().map(attachmentDTO -> attachmentDTO.getJpaEntity()).collect(Collectors.toSet()),
-                getAccount().getJpaEntity()
+                new Account(getAccount(), null, null, null, null, null, null, null, null, null)
+
                 );
 
     }
