@@ -30,7 +30,7 @@ public class Contact extends JpaEntity {
         this.contactPhotos = contactPhotos;
     }
 
-    public Contact(){
+    public Contact() {
         this.setContactPhotos(new HashSet<>());
     }
 

@@ -4,7 +4,7 @@ import com.ftn.osa.projekat_osa.model.User;
 
 import java.util.HashSet;
 
-public class UserDTO extends DtoObject<User>{
+public class UserDTO extends DtoObject<User> {
 
     private Long id;
     private String username;

@@ -12,27 +12,27 @@ import com.ftn.osa.projekat_osa.service.serviceInterface.ContactServiceInterface
 @Service
 public class ContactService implements ContactServiceInterface {
 
-	@Autowired
-	ContactRepository contactRepository;
-	
-	@Override
-	public List<Contact> getAll() {
-		return contactRepository.findAll();
-	}
+    @Autowired
+    ContactRepository contactRepository;
 
-	@Override
-	public Contact getOne(Long contactId) {
-		return contactRepository.getOne(contactId);
-	}
+    @Override
+    public List<Contact> getAll() {
+        return contactRepository.findAll();
+    }
 
-	@Override
-	public Contact save(Contact contact) {
-		return contactRepository.save(contact);
-	}
+    @Override
+    public Contact getOne(Long contactId) {
+        return contactRepository.getOne(contactId);
+    }
 
-	@Override
-	public void remove(Long contactId) {
-		contactRepository.deleteById(contactId);
-	}
+    @Override
+    public Contact save(Contact contact) {
+        return contactRepository.save(contact);
+    }
+
+    @Override
+    public void remove(Long contactId) {
+        contactRepository.deleteById(contactId);
+    }
 
 }

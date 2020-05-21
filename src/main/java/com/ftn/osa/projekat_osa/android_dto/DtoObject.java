@@ -7,12 +7,15 @@ import java.io.Serializable;
 
 public abstract class DtoObject<T extends JpaEntity> implements Serializable {
 
-    public DtoObject(){
+    public DtoObject() {
 
     }
+
     public DtoObject(T entity) throws Exception {
         throw new Exception("Not implemented");
-    };
+    }
+
+    ;
 
     @JsonIgnore
     public abstract T getJpaEntity();

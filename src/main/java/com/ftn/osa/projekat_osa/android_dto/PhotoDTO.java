@@ -7,7 +7,7 @@ public class PhotoDTO extends DtoObject<Photo> {
     private Long id;
     private String path;
 
-    public PhotoDTO(){
+    public PhotoDTO() {
 
     }
 

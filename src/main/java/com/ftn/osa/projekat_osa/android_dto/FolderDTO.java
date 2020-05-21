@@ -14,7 +14,7 @@ public class FolderDTO extends DtoObject<Folder> {
     private Set<Long> folders;
     private Set<MessageDTO> messages;
 
-    public FolderDTO(){
+    public FolderDTO() {
         folders = new HashSet<>();
         messages = new HashSet<>();
     }
@@ -32,9 +32,9 @@ public class FolderDTO extends DtoObject<Folder> {
         this.id = entity.getId() != null ? entity.getId() : 0;
         this.name = entity.getName();
         this.parentFolder = entity.getParentFolder() != null ? entity.getParentFolder().getId() : null;
-        if(entity.getFolders().size() > 0)
+        if (entity.getFolders().size() > 0)
             this.folders = entity.getFolders().stream().map(folder -> folder.getId()).collect(Collectors.toSet());
-        if(entity.getMessages().size() > 0)
+        if (entity.getMessages().size() > 0)
             this.messages = entity.getMessages().stream().map(message -> new MessageDTO(message)).collect(Collectors.toSet());
     }
 
@@ -92,12 +92,13 @@ public class FolderDTO extends DtoObject<Folder> {
      * It returns new JPA object for each of them with only their id set, rest of the values are null.
      * It is up to the user to find these values in the db and set them.
      * </p>
+     *
      * @return new JPA object that needs some editing
      */
     @Override
     public Folder getJpaEntity() {
         return new Folder(this.getId(), this.getName(), new Folder(this.getParentFolder(), null, null, null, null),
                 this.getMessages().stream().map(message -> message.getJpaEntity()).collect(Collectors.toSet()),
-                this.getFolders().stream().map(folder ->  new Folder(folder, null, null, null, null)).collect(Collectors.toSet()));
+                this.getFolders().stream().map(folder -> new Folder(folder, null, null, null, null)).collect(Collectors.toSet()));
     }
 }

@@ -15,9 +15,9 @@ public class User extends JpaEntity {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Contact> userContacts;
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Tag> userTags;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Account> userAccounts;
@@ -33,7 +33,7 @@ public class User extends JpaEntity {
         this.userAccounts = userAccounts;
     }
 
-    public User(){
+    public User() {
         this.userContacts = new HashSet<>();
         this.userTags = new HashSet<>();
         this.userAccounts = new HashSet<>();

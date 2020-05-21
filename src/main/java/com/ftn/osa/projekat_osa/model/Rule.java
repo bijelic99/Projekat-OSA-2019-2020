@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Rule extends JpaEntity {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "_condition")
-    private  Condition condition;
+    private Condition condition;
     @Column
     private String value;
     @Enumerated(EnumType.ORDINAL)

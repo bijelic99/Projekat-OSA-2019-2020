@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FolderRepository extends JpaRepository<Folder, Long> {
 
-	List<Folder> findByParentFolder(Folder folder);
+    List<Folder> findByParentFolder(Folder folder);
 }

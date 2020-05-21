@@ -21,17 +21,16 @@ public class RegisterController {
     private UserService userService;
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
         try {
             Optional<User> userOptional = userService.registerUser(userDTO.getJpaEntity());
             ResponseEntity<UserDTO> responseEntity;
-            if(userOptional.isPresent())
-                responseEntity  = new ResponseEntity<UserDTO>(new UserDTO(userOptional.get()), HttpStatus.OK);
+            if (userOptional.isPresent())
+                responseEntity = new ResponseEntity<UserDTO>(new UserDTO(userOptional.get()), HttpStatus.OK);
             else responseEntity = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
             return responseEntity;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

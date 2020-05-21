@@ -28,6 +28,6 @@ public abstract class JpaEntity implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        return this.getClass() == obj.getClass() && this.getId() == ((JpaEntity)obj).getId();
+        return this.getClass() == obj.getClass() && this.getId() == ((JpaEntity) obj).getId();
     }
 }

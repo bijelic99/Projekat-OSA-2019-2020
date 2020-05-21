@@ -3,7 +3,7 @@ package com.ftn.osa.projekat_osa.android_dto;
 import com.ftn.osa.projekat_osa.model.Tag;
 
 public class TagDTO extends DtoObject<Tag> {
-	
+
     private Long id;
     private String name;
 
@@ -15,14 +15,13 @@ public class TagDTO extends DtoObject<Tag> {
     /**
      *
      */
-    public TagDTO(){
+    public TagDTO() {
         this.id = null;
         this.name = null;
     }
 
     /**
-     *
-     * @param id tag id
+     * @param id   tag id
      * @param name tag name
      */
     public TagDTO(Long id, String name) {
@@ -31,7 +30,6 @@ public class TagDTO extends DtoObject<Tag> {
     }
 
     /**
-     *
      * @return id
      */
     public Long getId() {
@@ -39,7 +37,6 @@ public class TagDTO extends DtoObject<Tag> {
     }
 
     /**
-     *
      * @param id
      */
     public void setId(Long id) {
@@ -47,7 +44,6 @@ public class TagDTO extends DtoObject<Tag> {
     }
 
     /**
-     *
      * @return name
      */
     public String getName() {
@@ -55,7 +51,6 @@ public class TagDTO extends DtoObject<Tag> {
     }
 
     /**
-     *
      * @param name tag name
      */
     public void setName(String name) {

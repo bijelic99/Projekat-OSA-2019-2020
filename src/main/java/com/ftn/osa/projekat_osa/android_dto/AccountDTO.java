@@ -17,7 +17,7 @@ public class AccountDTO extends DtoObject<Account> {
     private String password;
     private Set<FolderDTO> accountFolders;
 
-    public AccountDTO(){
+    public AccountDTO() {
         this.accountFolders = new HashSet<>();
     }
 
@@ -106,9 +106,9 @@ public class AccountDTO extends DtoObject<Account> {
         String[] smtpFullAddress = this.getSmtp().split(":");
         String[] inFullAddress = this.getInServer().split(":");
         return new Account(this.getId(), smtpFullAddress[0], smtpFullAddress[1],
-            InServerType.valueOf(this.getInServerType()), inFullAddress[0], Integer.parseInt(inFullAddress[1]),
-            this.getUsername(), this.getPassword(), "",
-            this.getAccountFolders().stream().map(folder-> folder.getJpaEntity()).collect(Collectors.toSet())
+                InServerType.valueOf(this.getInServerType()), inFullAddress[0], Integer.parseInt(inFullAddress[1]),
+                this.getUsername(), this.getPassword(), "",
+                this.getAccountFolders().stream().map(folder -> folder.getJpaEntity()).collect(Collectors.toSet())
         );
     }
 }

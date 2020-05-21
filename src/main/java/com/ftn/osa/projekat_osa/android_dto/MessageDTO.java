@@ -23,7 +23,7 @@ public class MessageDTO extends DtoObject<Message> {
     private Set<TagDTO> tags;
     private Boolean unread;
 
-    public MessageDTO(){
+    public MessageDTO() {
         this.to = new HashSet<>();
         this.cc = new HashSet<>();
         this.bcc = new HashSet<>();
@@ -52,18 +52,18 @@ public class MessageDTO extends DtoObject<Message> {
         ContactDTO c = new ContactDTO();
         c.setEmail(entity.getFrom());
         this.from = c;
-        this.to = Arrays.stream(entity.getTo().split(" ")).map(email-> {
+        this.to = Arrays.stream(entity.getTo().split(" ")).map(email -> {
             ContactDTO contactDTO = new ContactDTO();
             contactDTO.setEmail(email);
             return contactDTO;
         }).collect(Collectors.toSet());
 
-        this.cc = Arrays.stream(entity.getCc().split(" ")).map(email-> {
+        this.cc = Arrays.stream(entity.getCc().split(" ")).map(email -> {
             ContactDTO contactDTO = new ContactDTO();
             contactDTO.setEmail(email);
             return contactDTO;
         }).collect(Collectors.toSet());
-        this.bcc = Arrays.stream(entity.getBcc().split(" ")).map(email-> {
+        this.bcc = Arrays.stream(entity.getBcc().split(" ")).map(email -> {
             ContactDTO contactDTO = new ContactDTO();
             contactDTO.setEmail(email);
             return contactDTO;
@@ -186,7 +186,7 @@ public class MessageDTO extends DtoObject<Message> {
                 getAttachments().stream().map(attachmentDTO -> attachmentDTO.getJpaEntity()).collect(Collectors.toSet()),
                 new Account(getAccount(), null, null, null, null, null, null, null, null, null)
 
-                );
+        );
 
     }
 }

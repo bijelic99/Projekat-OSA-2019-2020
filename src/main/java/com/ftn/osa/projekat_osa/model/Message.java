@@ -45,7 +45,7 @@ public class Message extends JpaEntity {
         this.account = account;
     }
 
-    public Message(){
+    public Message() {
         this.tags = new HashSet<>();
         this.attachments = new HashSet<>();
     }

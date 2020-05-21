@@ -6,9 +6,12 @@ import com.ftn.osa.projekat_osa.model.Folder;
 
 public interface FolderServiceInterface {
 
-	Folder getOne(Long folderID);
-	List<Folder> getAll();
-	Folder save(Folder folder);
-	void remove(Long folderID);
-	
+    Folder getOne(Long folderID);
+
+    List<Folder> getAll();
+
+    Folder save(Folder folder);
+
+    void remove(Long folderID);
+
 }

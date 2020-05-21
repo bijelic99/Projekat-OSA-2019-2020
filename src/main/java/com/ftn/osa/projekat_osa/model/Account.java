@@ -40,7 +40,7 @@ public class Account extends JpaEntity {
         this.accountFolders = accountFolders;
     }
 
-    public Account(){
+    public Account() {
         this.accountFolders = new HashSet<>();
     }
 

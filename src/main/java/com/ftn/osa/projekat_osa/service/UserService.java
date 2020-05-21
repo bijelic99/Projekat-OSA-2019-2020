@@ -26,8 +26,7 @@ public class UserService implements UserServiceInterface {
             } else {
                 return Optional.empty();
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
@@ -37,29 +36,26 @@ public class UserService implements UserServiceInterface {
     @Override
     public Optional<User> changePassword(Long userId, String currentPassword, String newPassword) throws ResourceNotFoundException, WrongPasswordException {
         Optional<User> userOptional = userRepository.findById(userId);
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if(user.getPassword().equals(currentPassword)){
+            if (user.getPassword().equals(currentPassword)) {
                 user.setPassword(newPassword);
 
                 return Optional.of(userRepository.save(user));
-            }
-            else throw new WrongPasswordException();
-        }
-        else throw new ResourceNotFoundException("User not found");
+            } else throw new WrongPasswordException();
+        } else throw new ResourceNotFoundException("User not found");
     }
 
     @Override
     public Optional<User> updateUser(Long userId, Map<String, String> newValues) throws ResourceNotFoundException {
         Optional<User> userOptional = userRepository.findById(userId);
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
-            if(newValues.containsKey("firstName")) user.setFirstName(newValues.get("firstName"));
+            if (newValues.containsKey("firstName")) user.setFirstName(newValues.get("firstName"));
 
-            if(newValues.containsKey("lastName")) user.setLastName(newValues.get("lastName"));
+            if (newValues.containsKey("lastName")) user.setLastName(newValues.get("lastName"));
 
             return Optional.of(userRepository.save(user));
-        }
-        else throw new ResourceNotFoundException("User not found");
+        } else throw new ResourceNotFoundException("User not found");
     }
 }

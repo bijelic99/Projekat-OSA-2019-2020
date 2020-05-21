@@ -9,7 +9,7 @@ public class AttachmentDTO extends DtoObject<Attachment> {
     private String type;
     private String name;
 
-    public AttachmentDTO(){
+    public AttachmentDTO() {
 
     }
 

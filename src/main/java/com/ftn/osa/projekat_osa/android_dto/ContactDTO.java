@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-
 public class ContactDTO extends DtoObject<Contact> {
     private Long id;
     private String first;
@@ -19,7 +18,7 @@ public class ContactDTO extends DtoObject<Contact> {
     private String format;
     private PhotoDTO photo;
 
-    public ContactDTO(){
+    public ContactDTO() {
 
     }
 
@@ -40,11 +39,10 @@ public class ContactDTO extends DtoObject<Contact> {
         this.display = entity.getDisplayName();
         this.email = entity.getEmail();
         this.format = entity.getNote();
-        if (entity.getContactPhotos() != null && entity.getContactPhotos().size() > 0){
+        if (entity.getContactPhotos() != null && entity.getContactPhotos().size() > 0) {
             Photo p = entity.getContactPhotos().stream().max(Comparator.comparing(JpaEntity::getId)).get();
             this.photo = new PhotoDTO(p);
-        }
-        else this.photo = null;
+        } else this.photo = null;
 
     }
 
@@ -107,7 +105,7 @@ public class ContactDTO extends DtoObject<Contact> {
     @Override
     public Contact getJpaEntity() {
         Set<Photo> photoSet = new HashSet<>();
-        if(getPhoto() != null ){
+        if (getPhoto() != null) {
             photoSet.add(getPhoto().getJpaEntity());
         }
         return new Contact(getId(), getFirst(), getLast(), getDisplay(), getEmail(), getFormat(), photoSet);

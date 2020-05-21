@@ -16,41 +16,40 @@ import com.ftn.osa.projekat_osa.service.serviceInterface.MessageServiceInterface
 @Service
 public class MessageService implements MessageServiceInterface {
 
-	@Autowired
-	MessageRepository messageRepository;
-	
-	@Override
-	public List<Message> getAll() {
-		return messageRepository.findAll();
-	}
+    @Autowired
+    MessageRepository messageRepository;
 
-	@Override
-	public Message getOne(Long messageID) {
-		return messageRepository.getOne(messageID);
-	}
+    @Override
+    public List<Message> getAll() {
+        return messageRepository.findAll();
+    }
 
-	@Override
-	public Message save(Message message) {
-		return messageRepository.save(message);
-	}
+    @Override
+    public Message getOne(Long messageID) {
+        return messageRepository.getOne(messageID);
+    }
 
-	@Override
-	public void remove(Long messageID) {
-		messageRepository.deleteById(messageID);
-	}
+    @Override
+    public Message save(Message message) {
+        return messageRepository.save(message);
+    }
 
-	@Override
-	public Set<Tag> addTags(Long messageId, Set<Tag> tags) throws NullPointerException {
-		if(messageId != null) {
-			if(tags != null)
-			{
-				Message message = messageRepository.getOne(messageId);
-				message.setTags(Stream.concat(message.getTags().stream(), tags.stream()).collect(Collectors.toSet()));
-				message = messageRepository.save(message);
+    @Override
+    public void remove(Long messageID) {
+        messageRepository.deleteById(messageID);
+    }
 
-				return message.getTags();
-			} else throw new NullPointerException("tags argument can't be null");
-		}	else throw new NullPointerException("messageId argument can't be null");
-	}
+    @Override
+    public Set<Tag> addTags(Long messageId, Set<Tag> tags) throws NullPointerException {
+        if (messageId != null) {
+            if (tags != null) {
+                Message message = messageRepository.getOne(messageId);
+                message.setTags(Stream.concat(message.getTags().stream(), tags.stream()).collect(Collectors.toSet()));
+                message = messageRepository.save(message);
+
+                return message.getTags();
+            } else throw new NullPointerException("tags argument can't be null");
+        } else throw new NullPointerException("messageId argument can't be null");
+    }
 
 }

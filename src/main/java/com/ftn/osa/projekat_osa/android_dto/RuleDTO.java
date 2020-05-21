@@ -11,7 +11,7 @@ public class RuleDTO extends DtoObject<Rule> {
     private FolderDTO destination;
     private String value;
 
-    public RuleDTO(){
+    public RuleDTO() {
 
     }
 

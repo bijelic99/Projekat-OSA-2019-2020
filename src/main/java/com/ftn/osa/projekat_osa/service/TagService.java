@@ -10,29 +10,29 @@ import com.ftn.osa.projekat_osa.repository.TagRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.TagServiceInterface;
 
 @Service
-public class TagService implements TagServiceInterface{
+public class TagService implements TagServiceInterface {
 
-	@Autowired
-	TagRepository tagRepository;
-	
-	@Override
-	public List<Tag> getAll() {
-		return tagRepository.findAll();
-	}
+    @Autowired
+    TagRepository tagRepository;
 
-	@Override
-	public Tag getOne(Long tagId) {
-		return tagRepository.getOne(tagId);
-	}
+    @Override
+    public List<Tag> getAll() {
+        return tagRepository.findAll();
+    }
 
-	@Override
-	public Tag save(Tag tag) {
-		return tagRepository.save(tag);
-	}
+    @Override
+    public Tag getOne(Long tagId) {
+        return tagRepository.getOne(tagId);
+    }
 
-	@Override
-	public void remove(Long tagId) {
-		tagRepository.deleteById(tagId);
-	}
+    @Override
+    public Tag save(Tag tag) {
+        return tagRepository.save(tag);
+    }
+
+    @Override
+    public void remove(Long tagId) {
+        tagRepository.deleteById(tagId);
+    }
 
 }

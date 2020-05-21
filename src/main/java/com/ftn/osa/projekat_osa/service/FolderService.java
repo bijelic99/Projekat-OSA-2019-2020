@@ -12,28 +12,28 @@ import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
 @Service
 public class FolderService implements FolderServiceInterface {
 
-	@Autowired
-	FolderRepository folderRepository;
-	
-	@Override
-	public Folder getOne(Long folderID) {
-		return folderRepository.getOne(folderID);
-	}
+    @Autowired
+    FolderRepository folderRepository;
 
-	@Override
-	public List<Folder> getAll() {
-		return folderRepository.findAll();
-	}
+    @Override
+    public Folder getOne(Long folderID) {
+        return folderRepository.getOne(folderID);
+    }
 
-	@Override
-	public Folder save(Folder folder) {
-		return folderRepository.save(folder);
-	}
+    @Override
+    public List<Folder> getAll() {
+        return folderRepository.findAll();
+    }
 
-	@Override
-	public void remove(Long folderID) {
-		folderRepository.deleteById(folderID);
-	}
-	
-	
+    @Override
+    public Folder save(Folder folder) {
+        return folderRepository.save(folder);
+    }
+
+    @Override
+    public void remove(Long folderID) {
+        folderRepository.deleteById(folderID);
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.ftn.osa.projekat_osa.model;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
 @Entity
 @Table(name = "folders")
 public class Folder extends JpaEntity {
@@ -23,7 +24,7 @@ public class Folder extends JpaEntity {
         this.folders = folders;
     }
 
-    public Folder(){
+    public Folder() {
         this.messages = new HashSet<>();
         this.folders = new HashSet<>();
     }
