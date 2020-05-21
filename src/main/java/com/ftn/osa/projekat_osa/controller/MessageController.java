@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
 import com.ftn.osa.projekat_osa.android_dto.TagDTO;
+import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Tag;
+import com.ftn.osa.projekat_osa.service.MailService;
 import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.model.Message;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MessageServiceInterface;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping(value = "api/messages")
 public class MessageController {
@@ -28,6 +32,9 @@ public class MessageController {
 
     @Autowired
     private FolderServiceInterface folderService;
+
+    @Autowired
+    private MailService mailService;
 
     @GetMapping
     public ResponseEntity<List<MessageDTO>> getMessages() {
@@ -85,5 +92,17 @@ public class MessageController {
 //			}
 //		}
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/send", consumes = "application/json")
+    public ResponseEntity<Object> sendMessage(@RequestBody MessageDTO messageDTO){
+        try {
+            MessageDTO sentMsg = new MessageDTO(mailService.sendMessage(messageDTO.getJpaEntity()));
+            return new ResponseEntity<>(sentMsg, HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

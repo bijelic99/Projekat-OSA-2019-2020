@@ -11,6 +11,7 @@ INSERT INTO USERS(ID, FIRST_NAME, LAST_NAME, USERNAME, PASSWORD) VALUES(2, 'Peta
 
 INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(1, 'johndoe@mail.com', 'fake.server.address', 8080, 1, 'password', 'fake.server.address', 8080, 'johnDoesMailAccount');
 INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(2, 'petar_petrovic@mail.com', 'fake.server.address', 8080, 1, 'password', 'fake.server.address', 8080, 'johnDoesMailAccount');
+INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(3, 'fake.petar.petrovic@gmail.com', 'fake.server.address', 8080, 1, 'petarpetrovic789*', 'smtp.gmail.com', 587, 'fake.petar.petrovic@gmail.com');
 
 INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(1, 1);
 INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(2, 2);
@@ -23,6 +24,8 @@ INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUE
 
 INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(1, 'bcc', 'cc', 'new content', "from", 'subject1', 'to1', 0, 1);
 INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(2, 'bcc1', 'cc1', 'new content1', "from", 'subject2', 'to2', 1, 2);
+
+INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(3, 'fake.petar.petrovic@gmail.com, mailtestib887@gmail.com', 'mailtestib887@gmail.com', 'Test email from OSA project', 'fake.petar.petrovic@gmail.com', 'Success? Fail? Hotel Trivago', 'mailtestib887@gmail.com', 1, 3);
 
 INSERT INTO attachments(id, data, mime_type, name) VALUES(1, 'data1', 'mime type1', 'name1');
 INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type2', 'name2');
