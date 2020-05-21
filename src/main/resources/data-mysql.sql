@@ -31,7 +31,7 @@ INSERT INTO accounts_account_folders(account_id, account_folders_id) VALUES(1,1)
 
 --INSERT INTO contacts_contact_photos(contact_id, contact_photos_id) VALUE(1, null);
 
---INSERT INTO folders_messages(folder_id, messages_id) VALUES(1,1);
+INSERT INTO folders_messages(folder_id, messages_id) VALUES(1,1);
 
 --INSERT INTO messages_attachments(message_id, attachments_id) VALUES(1,1);
 --INSERT INTO messages_attachments(message_id, attachments_id) VALUES(2,2);
