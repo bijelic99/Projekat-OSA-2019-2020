@@ -35,8 +35,9 @@ public class MessageService implements MessageServiceInterface {
 	}
 
 	@Override
-	public void remove(Long messageID) {
+	public Set<Message> remove(Long messageID) {
 		messageRepository.deleteById(messageID);
+		return null;
 	}
 
 	@Override

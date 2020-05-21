@@ -61,30 +61,29 @@ public class MessageController {
 	}
 
 	@PutMapping(value = "/{messageID}/move", consumes = "application/json")
-	public ResponseEntity<Void> moveMessage(@PathVariable("messageID") Long messageId){//, @RequestBody Long folderId){
+	public ResponseEntity<Void> moveMessage(@PathVariable("messageID") Long messageId, @RequestBody FolderDTO folderDTO){
 		Message message = messageService.getOne(messageId);
-//		Folder folder = folderService.getOne(folderId);
-//		System.out.println(folder.getId());
-//		Folder thisF;
+		Folder folder = folderService.getOne(folderDTO.getId());
+		Folder thisF;
 		List<Folder> folders = folderService.getAll();
 
 		for(Folder f:folders) {
 			Set<Message> messagesF = f.getMessages();
-			System.out.println(messagesF);
-//			for(Message m:messagesF){
-//				System.out.println(m.getId());
-//				if(m.getId() == messageId){
-//					thisF = f;
-//					messagesF.remove(message);
-//					thisF.setMessages(messagesF);
-//				}
+			for(Message m:messagesF){
+				if(m.getId() == messageId){
+					thisF = folderService.getOne(f.getId());
+					messagesF.remove(message);
+					thisF.setMessages(messagesF);
+					folderService.save(f);
+				}
 			}
-//			if(f.getId() == folderId){
-//				Set<Message> messagesFN = f.getMessages();
-//				messagesFN.add(message);
-//				folder.setMessages(messagesFN);
-//			}
-//		}
+			if(f.getId() == folderDTO.getId()){
+				Set<Message> messagesFN = f.getMessages();
+				messagesFN.add(message);
+				folder.setMessages(messagesFN);
+				folderService.save(f);
+			}
+		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }
