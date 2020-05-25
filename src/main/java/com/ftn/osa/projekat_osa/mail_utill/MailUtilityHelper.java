@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public interface MailUtilityHelper {
@@ -36,10 +37,12 @@ public interface MailUtilityHelper {
     }
 
     static Folder mailClientFolderToJpaEntityFolder(javax.mail.Folder folder, Folder parentFolder, Account account) throws MessagingException {
+        folder.open(javax.mail.Folder.READ_ONLY);
         Folder jpaFolder = new Folder();
         jpaFolder.setName(folder.getName());
         jpaFolder.setParentFolder(parentFolder);
         //rekurzivno poziva f-ju
+        /*
         jpaFolder.setFolders(Arrays.stream(folder.list())
                 .map(folder1 -> {
                     try {
@@ -50,16 +53,19 @@ public interface MailUtilityHelper {
                     }
                 })
                 .collect(Collectors.toSet()));
-        jpaFolder.setMessages(Arrays.stream(folder.getMessages())
-                .map(message -> {
-                    try {
-                        return mailClientMessageToJpaEntityMessage(message, account);
-                    } catch (Exception e){
-                        e.printStackTrace();
-                        return null;
-                    }
-                })
-                .collect(Collectors.toSet()));
+
+         */
+        if(folder.isOpen())
+            jpaFolder.setMessages(Arrays.stream(folder.getMessages())
+                    .map(message -> {
+                        try {
+                            return mailClientMessageToJpaEntityMessage(message, account);
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            return null;
+                        }
+                    })
+                    .collect(Collectors.toSet()));
 
         return jpaFolder;
     }
@@ -67,29 +73,33 @@ public interface MailUtilityHelper {
     static Message mailClientMessageToJpaEntityMessage(javax.mail.Message message, Account account) throws MessagingException, IOException {
         Message jpaMessage = new Message();
         jpaMessage.setFrom(message.getFrom()[0].toString());
-        jpaMessage.setBcc(
-                Arrays.stream(message.getRecipients(javax.mail.Message.RecipientType.BCC))
-                        .map(address -> address.toString())
-                        .collect(Collectors.joining(", ")));
+        if(message.getRecipients(javax.mail.Message.RecipientType.BCC) != null)
+            jpaMessage.setBcc(
+                    Arrays.stream(message.getRecipients(javax.mail.Message.RecipientType.BCC))
+                            .map(address -> address.toString())
+                            .collect(Collectors.joining(", ")));
+        if(message.getRecipients(javax.mail.Message.RecipientType.CC) != null)
+            jpaMessage.setCc(
+                    Arrays.stream(message.getRecipients(javax.mail.Message.RecipientType.CC))
+                            .map(address -> address.toString())
+                            .collect(Collectors.joining(", ")));
+        if(message.getRecipients(javax.mail.Message.RecipientType.TO) != null)
+            jpaMessage.setTo(
+                    Arrays.stream(message.getRecipients(javax.mail.Message.RecipientType.TO))
+                            .map(address -> address.toString())
+                            .collect(Collectors.joining(", ")));
 
-        jpaMessage.setCc(
-                Arrays.stream(message.getRecipients(javax.mail.Message.RecipientType.CC))
-                        .map(address -> address.toString())
-                        .collect(Collectors.joining(", ")));
-
-        jpaMessage.setTo(
-                Arrays.stream(message.getRecipients(javax.mail.Message.RecipientType.TO))
-                        .map(address -> address.toString())
-                        .collect(Collectors.joining(", ")));
         jpaMessage.setSubject(message.getSubject());
         jpaMessage.setUnread(!message.isSet(Flags.Flag.SEEN));
-        jpaMessage.setDateTime(message.getReceivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+        if(message.getReceivedDate() != null)
+            jpaMessage.setDateTime(message.getReceivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         jpaMessage.setAccount(account);
-        if(message.getContentType().equals("multipart")){
+        //System.out.println("-------" + message.getContentType()+ "   " + message.getSubject());
+        if(message.getContentType().matches("^multipart/[\\s\\S]*$")){
             Multipart multipartContent = (Multipart) message.getContent();
             for(int i = 0; i<multipartContent.getCount(); i++){
                 BodyPart bodyPart = multipartContent.getBodyPart(i);
-                if(bodyPart.getContentType().matches("^text/.*$")){
+                if(bodyPart.getContentType().matches("^text/[\\s\\S]*$")){
                     jpaMessage.setContent(bodyPart.getContent().toString());
                 }
                 else {
@@ -109,6 +119,6 @@ public interface MailUtilityHelper {
         else{
             jpaMessage.setContent(message.getContent().toString());
         }
-
+        return jpaMessage;
     }
 }

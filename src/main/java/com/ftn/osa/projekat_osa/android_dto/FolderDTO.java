@@ -29,7 +29,7 @@ public class FolderDTO extends DtoObject<Folder> {
 
     public FolderDTO(Folder entity) {
         this();
-        this.id = entity.getId() != null ? entity.getId() : 0;
+        this.id = entity.getId();
         this.name = entity.getName();
         this.parentFolder = entity.getParentFolder() != null ? entity.getParentFolder().getId() : null;
         if (entity.getFolders().size() > 0)

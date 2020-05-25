@@ -47,27 +47,30 @@ public class MessageDTO extends DtoObject<Message> {
     }
 
     public MessageDTO(Message entity) {
+        this();
         this.id = entity.getId();
         this.account = entity.getAccount().getId();
         ContactDTO c = new ContactDTO();
         c.setEmail(entity.getFrom());
         this.from = c;
-        this.to = Arrays.stream(entity.getTo().split(" ")).map(email -> {
-            ContactDTO contactDTO = new ContactDTO();
-            contactDTO.setEmail(email);
-            return contactDTO;
-        }).collect(Collectors.toSet());
-
-        this.cc = Arrays.stream(entity.getCc().split(" ")).map(email -> {
-            ContactDTO contactDTO = new ContactDTO();
-            contactDTO.setEmail(email);
-            return contactDTO;
-        }).collect(Collectors.toSet());
-        this.bcc = Arrays.stream(entity.getBcc().split(" ")).map(email -> {
-            ContactDTO contactDTO = new ContactDTO();
-            contactDTO.setEmail(email);
-            return contactDTO;
-        }).collect(Collectors.toSet());
+        if(entity.getTo() != null && !entity.getTo().equals(""))
+            this.to = Arrays.stream(entity.getTo().split(" ")).map(email -> {
+                ContactDTO contactDTO = new ContactDTO();
+                contactDTO.setEmail(email);
+                return contactDTO;
+            }).collect(Collectors.toSet());
+        if(entity.getCc() != null && !entity.getCc().equals(""))
+            this.cc = Arrays.stream(entity.getCc().split(" ")).map(email -> {
+                ContactDTO contactDTO = new ContactDTO();
+                contactDTO.setEmail(email);
+                return contactDTO;
+            }).collect(Collectors.toSet());
+        if(entity.getBcc() != null && !entity.getBcc().equals(""))
+            this.bcc = Arrays.stream(entity.getBcc().split(" ")).map(email -> {
+                ContactDTO contactDTO = new ContactDTO();
+                contactDTO.setEmail(email);
+                return contactDTO;
+            }).collect(Collectors.toSet());
         this.dateTime = entity.getDateTime();
         this.subject = entity.getSubject();
         this.content = entity.getContent();

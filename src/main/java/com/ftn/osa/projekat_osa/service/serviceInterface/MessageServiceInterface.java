@@ -3,6 +3,8 @@ package com.ftn.osa.projekat_osa.service.serviceInterface;
 import java.util.List;
 import java.util.Set;
 
+import com.ftn.osa.projekat_osa.model.Account;
+import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Message;
 import com.ftn.osa.projekat_osa.model.Tag;
 
