@@ -1,13 +1,17 @@
 package com.ftn.osa.projekat_osa.mail_utill;
 
 import com.ftn.osa.projekat_osa.model.Account;
+import com.ftn.osa.projekat_osa.model.InServerType;
 import com.ftn.osa.projekat_osa.model.Message;
+import com.sun.mail.pop3.POP3Folder;
+import com.sun.mail.pop3.POP3Store;
 
 import javax.activation.DataHandler;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MailUtility{
     Account account;
@@ -30,6 +34,15 @@ public class MailUtility{
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.host", account.getSmtpAddress());
         properties.put("mail.smtp.port", account.getSmtpPort());
+
+        if(account.getInServerType() == InServerType.POP3){
+            properties.put("mail.pop3.host", account.getInServerAddress());
+            properties.put("mail.pop3.port", account.getInServerPort());
+        }
+        else if (account.getInServerType() == InServerType.IMAP){
+            properties.put("mail.imap.host", account.getInServerAddress());
+            properties.put("mail.imap.port", account.getInServerPort());
+        }
 
         Session newSession = Session.getInstance(properties, new Authenticator() {
             @Override
@@ -90,6 +103,25 @@ public class MailUtility{
         Transport.send(mimeMessage);
 
         setSession(null);
+    }
+
+    public Set<com.ftn.osa.projekat_osa.model.Folder> getAllMessages() throws MessagingException {
+        if (getSession() == null) startSession();
+        POP3Store pop3Store = (POP3Store)getSession().getStore();
+        Folder rootFolder = pop3Store.getDefaultFolder();
+        Set<com.ftn.osa.projekat_osa.model.Folder> folders = Arrays.stream(rootFolder.list())
+                .map(folder -> {
+                    try {
+                        return MailUtilityHelper.mailClientFolderToJpaEntityFolder(folder, null, getAccount());
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }).collect(Collectors.toSet());
+
+        setSession(null);
+
+        return folders;
     }
 
     public Account getAccount() {
