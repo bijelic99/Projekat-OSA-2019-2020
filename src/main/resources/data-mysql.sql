@@ -12,6 +12,7 @@ INSERT INTO USERS(ID, FIRST_NAME, LAST_NAME, USERNAME, PASSWORD) VALUES(2, 'Peta
 INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(1, 'johndoe@mail.com', 'fake.server.address', 8080, 1, 'password', 'fake.server.address', 8080, 'johnDoesMailAccount');
 INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(2, 'petar_petrovic@mail.com', 'fake.server.address', 8080, 1, 'password', 'fake.server.address', 8080, 'johnDoesMailAccount');
 INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(3, 'fake.petar.petrovic@gmail.com', 'pop.gmail.com', 995, 0, 'petarpetrovic789*', 'smtp.gmail.com', 587, 'fake.petar.petrovic@gmail.com');
+INSERT INTO ACCOUNTS(ID, DISPLAY_NAME, IN_SERVER_ADDRESS, IN_SERVER_PORT, IN_SERVER_TYPE, PASSWORD, SMTP_ADDRESS, SMTP_PORT, USERNAME) VALUES(4, 'fake.petar.petrovic@gmail.com', 'imap.gmail.com', 993, 1, 'petarpetrovic789*', 'smtp.gmail.com', 587, 'fake.petar.petrovic@gmail.com');
 
 INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(1, 1);
 INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(2, 2);

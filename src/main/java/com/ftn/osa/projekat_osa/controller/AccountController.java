@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,7 +95,8 @@ public class AccountController {
 
     @GetMapping(value = "/{id}/folder-tree")
     public ResponseEntity<Set<Object>> getFolderTree(@PathVariable("id") Long accountId) throws ResourceNotFoundException, MessagingException {
-        Set<FolderDTO> folderDTOSet = mailService.getWholeFolderTree(accountId).stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
+        Set<Folder> folderSet = mailService.getWholeFolderTree(accountId);
+        Set<FolderDTO> folderDTOSet = folderSet.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
         return new ResponseEntity(folderDTOSet, HttpStatus.OK);
     }
 }

@@ -12,7 +12,7 @@ public class Attachment extends JpaEntity {
     private String data;
     @Column(nullable = false)
     private String mimeType;
-    @Column(nullable = false)
+    @Column(columnDefinition = "varchar(255) default ''")
     private String name;
 
     public Attachment(Long id, String data, String mimeType, String name) {

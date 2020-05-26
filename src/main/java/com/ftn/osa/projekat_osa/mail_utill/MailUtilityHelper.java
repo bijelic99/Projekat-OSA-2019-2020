@@ -1,9 +1,6 @@
 package com.ftn.osa.projekat_osa.mail_utill;
 
-import com.ftn.osa.projekat_osa.model.Account;
-import com.ftn.osa.projekat_osa.model.Attachment;
-import com.ftn.osa.projekat_osa.model.Folder;
-import com.ftn.osa.projekat_osa.model.Message;
+import com.ftn.osa.projekat_osa.model.*;
 
 import javax.activation.DataHandler;
 import javax.mail.BodyPart;
@@ -37,35 +34,38 @@ public interface MailUtilityHelper {
     }
 
     static Folder mailClientFolderToJpaEntityFolder(javax.mail.Folder folder, Folder parentFolder, Account account) throws MessagingException {
-        folder.open(javax.mail.Folder.READ_ONLY);
+
         Folder jpaFolder = new Folder();
         jpaFolder.setName(folder.getName());
         jpaFolder.setParentFolder(parentFolder);
         //rekurzivno poziva f-ju
-        /*
-        jpaFolder.setFolders(Arrays.stream(folder.list())
-                .map(folder1 -> {
-                    try {
-                        return MailUtilityHelper.mailClientFolderToJpaEntityFolder(folder1, jpaFolder, account);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                })
-                .collect(Collectors.toSet()));
 
-         */
-        if(folder.isOpen())
-            jpaFolder.setMessages(Arrays.stream(folder.getMessages())
-                    .map(message -> {
+        if(folder.getType() == javax.mail.Folder.HOLDS_FOLDERS)
+            jpaFolder.setFolders(Arrays.stream(folder.list())
+                    .map(folder1 -> {
                         try {
-                            return mailClientMessageToJpaEntityMessage(message, account);
-                        } catch (Exception e){
+                            return MailUtilityHelper.mailClientFolderToJpaEntityFolder(folder1, jpaFolder, account);
+                        } catch (MessagingException e) {
                             e.printStackTrace();
                             return null;
                         }
                     })
                     .collect(Collectors.toSet()));
+
+
+        if(folder.getType() == javax.mail.Folder.HOLDS_MESSAGES || folder.getType() == 3) {
+            folder.open(javax.mail.Folder.READ_ONLY);
+            jpaFolder.setMessages(Arrays.stream(folder.getMessages())
+                    .map(message -> {
+                        try {
+                            return mailClientMessageToJpaEntityMessage(message, account);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    })
+                    .collect(Collectors.toSet()));
+        }
 
         return jpaFolder;
     }
@@ -95,12 +95,12 @@ public interface MailUtilityHelper {
             jpaMessage.setDateTime(message.getReceivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
         jpaMessage.setAccount(account);
         //System.out.println("-------" + message.getContentType()+ "   " + message.getSubject());
-        if(message.getContentType().matches("^multipart/[\\s\\S]*$")){
+        if(message.getContentType().toLowerCase().matches("^multipart/[\\s\\S]*$")){
             Multipart multipartContent = (Multipart) message.getContent();
             for(int i = 0; i<multipartContent.getCount(); i++){
                 BodyPart bodyPart = multipartContent.getBodyPart(i);
-                if(bodyPart.getContentType().matches("^text/[\\s\\S]*$")){
-                    jpaMessage.setContent(bodyPart.getContent().toString());
+                if(bodyPart.getContentType().toLowerCase().matches("^text/[\\s\\S]*$")){
+                    jpaMessage.setContent((jpaMessage.getContent() != null ? jpaMessage.getContent() : "") + bodyPart.getContent().toString());
                 }
                 else {
                     Attachment attachment = new Attachment();

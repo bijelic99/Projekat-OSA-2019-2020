@@ -22,7 +22,7 @@ public class Message extends JpaEntity {
     private Set<Tag> tags;
     @Column
     private String subject;
-    @Column
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     private String content;
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Attachment> attachments;

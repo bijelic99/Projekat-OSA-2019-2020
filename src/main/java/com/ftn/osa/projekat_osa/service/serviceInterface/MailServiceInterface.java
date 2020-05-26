@@ -12,4 +12,6 @@ public interface MailServiceInterface {
     public Message sendMessage(Message message) throws ResourceNotFoundException, MessagingException;
 
     public Set<Folder> getWholeFolderTree(Long accountId) throws ResourceNotFoundException, MessagingException;
+
+    public Folder addFolderToDb(Folder folder, Folder parentFolder);
 }

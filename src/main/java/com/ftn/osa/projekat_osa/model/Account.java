@@ -24,7 +24,7 @@ public class Account extends JpaEntity {
     private String password;
     @Column(name = "display_name")
     private String displayName;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Folder> accountFolders;
 
     public Account(Long id, String smtpAddress, String smtpPort, InServerType inServerType, String inServerAddress, Integer inServerPort, String username, String password, String displayName, Set<Folder> accountFolders) {

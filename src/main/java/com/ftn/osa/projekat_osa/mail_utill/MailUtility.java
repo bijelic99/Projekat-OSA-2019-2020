@@ -111,9 +111,7 @@ public class MailUtility{
         if (getSession() == null) startSession();
         Store store = getSession().getStore(account.getInServerType() == InServerType.POP3 ? "pop3" : account.getInServerType() == InServerType.IMAP ? "imap" : null);
         store.connect(getAccount().getUsername(), getAccount().getPassword());
-        //store.connect(account.getInServerAddress(), account.getInServerPort(), getAccount().getUsername(), getAccount().getPassword());
         Folder rootFolder = store.getDefaultFolder();
-        //rootFolder.open(Folder.READ_ONLY);
         Set<com.ftn.osa.projekat_osa.model.Folder> folders = Arrays.stream(rootFolder.list())
                 .map(folder -> {
                     try {
