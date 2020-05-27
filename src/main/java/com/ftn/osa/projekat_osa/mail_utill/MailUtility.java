@@ -121,7 +121,7 @@ public class MailUtility{
                         return null;
                     }
                 }).collect(Collectors.toSet());
-
+        
         setSession(null);
 
         return folders;

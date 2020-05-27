@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -72,6 +73,7 @@ public interface MailUtilityHelper {
 
     static Message mailClientMessageToJpaEntityMessage(javax.mail.Message message, Account account) throws MessagingException, IOException {
         Message jpaMessage = new Message();
+        jpaMessage.setDateTime(LocalDateTime.ofInstant(message.getSentDate().toInstant(), ZoneId.systemDefault()));
         jpaMessage.setFrom(message.getFrom()[0].toString());
         if(message.getRecipients(javax.mail.Message.RecipientType.BCC) != null)
             jpaMessage.setBcc(
