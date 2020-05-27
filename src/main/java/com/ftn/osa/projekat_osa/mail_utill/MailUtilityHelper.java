@@ -67,7 +67,7 @@ public interface MailUtilityHelper {
                     })
                     .collect(Collectors.toSet()));
         }
-
+        if(folder.isOpen()) folder.close();
         return jpaFolder;
     }
 
