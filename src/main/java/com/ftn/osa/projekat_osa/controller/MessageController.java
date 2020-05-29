@@ -27,83 +27,67 @@ import javax.mail.MessagingException;
 @RequestMapping(value = "api/messages")
 public class MessageController {
 
-    @Autowired
-    private MessageServiceInterface messageService;
+	@Autowired
+	private MessageServiceInterface messageService;
 
-    @Autowired
-    private FolderServiceInterface folderService;
+	@Autowired
+	private FolderServiceInterface folderService;
+	
+	@GetMapping
+	public ResponseEntity<List<MessageDTO>> getMessages() {
+		List<Message> messages = messageService.getAll();
+		
+		List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
+		for(Message mess : messages) {
+			messagesDTO.add(new MessageDTO(mess));
+		}
+		return new ResponseEntity<List<MessageDTO>>(messagesDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<MessageDTO> getMessage(@PathVariable("id") Long id){
+		Message message = messageService.getOne(id);
+		if(message == null) {
+			return new ResponseEntity<MessageDTO>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<MessageDTO>(new MessageDTO(message), HttpStatus.OK);
+	}
 
-    @Autowired
-    private MailService mailService;
+	@PutMapping(value = "/{messageId}/tags")
+	public ResponseEntity<Object> putMessageTag(@PathVariable("messageId") Long id, @RequestBody Set<TagDTO> tags){
+		try {
+			Set<Tag> allMessageTags = messageService.addTags(id, tags.stream().map(tagDTO -> tagDTO.getJpaEntity()).collect(Collectors.toSet()));
+			return new ResponseEntity<>(allMessageTags.stream().map(tag -> new TagDTO(tag)).collect(Collectors.toSet()), HttpStatus.OK);
+		}
+		catch (NullPointerException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		}
+	}
 
-    @GetMapping
-    public ResponseEntity<List<MessageDTO>> getMessages() {
-        List<Message> messages = messageService.getAll();
+	@PutMapping(value = "/{messageID}/move", consumes = "application/json")
+	public ResponseEntity<Void> moveMessage(@PathVariable("messageID") Long messageId, @RequestBody FolderDTO folderDTO){
+		Message message = messageService.getOne(messageId);
+		Folder folder = folderService.getOne(folderDTO.getId());
+		Folder thisF;
+		List<Folder> folders = folderService.getAll();
 
-        List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
-        for (Message mess : messages) {
-            messagesDTO.add(new MessageDTO(mess));
-        }
-        return new ResponseEntity<List<MessageDTO>>(messagesDTO, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<MessageDTO> getMessage(@PathVariable("id") Long id) {
-        Message message = messageService.getOne(id);
-        if (message == null) {
-            return new ResponseEntity<MessageDTO>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<MessageDTO>(new MessageDTO(message), HttpStatus.OK);
-    }
-
-    @PutMapping(value = "/{messageId}/tags")
-    public ResponseEntity<Object> putMessageTag(@PathVariable("messageId") Long id, @RequestBody Set<TagDTO> tags) {
-        try {
-            Set<Tag> allMessageTags = messageService.addTags(id, tags.stream().map(tagDTO -> tagDTO.getJpaEntity()).collect(Collectors.toSet()));
-            return new ResponseEntity<>(allMessageTags.stream().map(tag -> new TagDTO(tag)).collect(Collectors.toSet()), HttpStatus.OK);
-        } catch (NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-    }
-
-    @PutMapping(value = "/{messageID}/move", consumes = "application/json")
-    public ResponseEntity<Void> moveMessage(@PathVariable("messageID") Long messageId) {//, @RequestBody Long folderId){
-        Message message = messageService.getOne(messageId);
-//		Folder folder = folderService.getOne(folderId);
-//		System.out.println(folder.getId());
-//		Folder thisF;
-        List<Folder> folders = folderService.getAll();
-
-        for (Folder f : folders) {
-            Set<Message> messagesF = f.getMessages();
-            System.out.println(messagesF);
-//			for(Message m:messagesF){
-//				System.out.println(m.getId());
-//				if(m.getId() == messageId){
-//					thisF = f;
-//					messagesF.remove(message);
-//					thisF.setMessages(messagesF);
-//				}
-        }
-//			if(f.getId() == folderId){
-//				Set<Message> messagesFN = f.getMessages();
-//				messagesFN.add(message);
-//				folder.setMessages(messagesFN);
-//			}
-//		}
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-
-    @PostMapping(value = "/send", consumes = "application/json")
-    public ResponseEntity<Object> sendMessage(@RequestBody MessageDTO messageDTO){
-        try {
-            MessageDTO sentMsg = new MessageDTO(mailService.sendMessage(messageDTO.getJpaEntity()));
-            return new ResponseEntity<>(sentMsg, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
+		for(Folder f:folders) {
+			Set<Message> messagesF = f.getMessages();
+			for(Message m:messagesF){
+				if(m.getId() == messageId){
+					thisF = folderService.getOne(f.getId());
+					messagesF.remove(message);
+					thisF.setMessages(messagesF);
+					folderService.save(f);
+				}
+			}
+			if(f.getId() == folderDTO.getId()){
+				Set<Message> messagesFN = f.getMessages();
+				messagesFN.add(message);
+				folder.setMessages(messagesFN);
+				folderService.save(f);
+			}
+		}
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 }
