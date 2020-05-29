@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Photo;
 
 public class PhotoDTO extends DtoObject<Photo> {
@@ -20,6 +21,7 @@ public class PhotoDTO extends DtoObject<Photo> {
         this.id = id;
         this.path = path;
     }
+
 
     public Long getId() {
         return id;

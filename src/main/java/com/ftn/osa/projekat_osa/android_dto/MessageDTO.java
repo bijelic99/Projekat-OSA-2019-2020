@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Message;
 
@@ -79,6 +80,7 @@ public class MessageDTO extends DtoObject<Message> {
         this.unread = entity.isUnread();
     }
 
+
     public Long getId() {
         return id;
     }
@@ -86,6 +88,7 @@ public class MessageDTO extends DtoObject<Message> {
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public Long getAccount() {
         return account;

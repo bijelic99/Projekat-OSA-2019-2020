@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.User;
 
 import java.util.HashSet;
@@ -27,6 +28,7 @@ public class UserDTO extends DtoObject<User> {
         this.firstName = entity.getFirstName();
         this.lastName = entity.getLastName();
     }
+
 
     public Long getId() {
         return id;

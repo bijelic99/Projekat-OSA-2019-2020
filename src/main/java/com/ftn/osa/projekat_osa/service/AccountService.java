@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
 import com.ftn.osa.projekat_osa.model.Account;
+import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.repository.AccountRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ public class AccountService implements AccountServiceInterface {
     @Override
     public void remove(Long accountId) {
         accountRepository.deleteById(accountId);
+    }
+
+    @Override
+    public Set<Folder> getAccountFolders(Long accountId) {
+        return accountRepository.getAccountFolders(accountId);
     }
 
 }

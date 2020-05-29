@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Contact;
 import com.ftn.osa.projekat_osa.model.JpaEntity;
 import com.ftn.osa.projekat_osa.model.Photo;
@@ -45,6 +46,7 @@ public class ContactDTO extends DtoObject<Contact> {
         } else this.photo = null;
 
     }
+
 
     public Long getId() {
         return id;

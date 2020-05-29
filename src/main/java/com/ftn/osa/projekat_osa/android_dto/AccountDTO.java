@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.InServerType;
 
@@ -44,6 +45,7 @@ public class AccountDTO extends DtoObject<Account> {
         this.password = entity.getPassword();
         this.accountFolders = entity.getAccountFolders().stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
     }
+
 
     public Long getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Folder;
 
 import java.util.HashSet;
@@ -37,6 +38,7 @@ public class FolderDTO extends DtoObject<Folder> {
         if (entity.getMessages().size() > 0)
             this.messages = entity.getMessages().stream().map(message -> new MessageDTO(message)).collect(Collectors.toSet());
     }
+
 
     public Long getId() {
         return id;

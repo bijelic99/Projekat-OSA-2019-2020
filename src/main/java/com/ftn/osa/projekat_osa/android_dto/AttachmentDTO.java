@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Attachment;
 
 public class AttachmentDTO extends DtoObject<Attachment> {
@@ -27,6 +28,7 @@ public class AttachmentDTO extends DtoObject<Attachment> {
         this.type = entity.getMime_type();
         this.name = entity.getName();
     }
+
 
     public Long getId() {
         return id;

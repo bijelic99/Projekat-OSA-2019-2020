@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Tag;
 
 public class TagDTO extends DtoObject<Tag> {
@@ -32,6 +33,7 @@ public class TagDTO extends DtoObject<Tag> {
     /**
      * @return id
      */
+
     public Long getId() {
         return id;
     }

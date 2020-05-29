@@ -99,4 +99,10 @@ public class AccountController {
         Set<FolderDTO> folderDTOSet = folderSet.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
         return new ResponseEntity(folderDTOSet, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/{id}/folders")
+    public ResponseEntity<Set<FolderDTO>> getAccountFolders(@PathVariable("id") Long accountId){
+        Set<Folder> folders = accountService.getAccountFolders(accountId);
+        return new ResponseEntity<>(folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet()), HttpStatus.OK);
+    }
 }

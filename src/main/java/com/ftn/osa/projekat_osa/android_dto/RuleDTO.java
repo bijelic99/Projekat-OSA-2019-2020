@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.android_dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ftn.osa.projekat_osa.model.Condition;
 import com.ftn.osa.projekat_osa.model.Operation;
 import com.ftn.osa.projekat_osa.model.Rule;
@@ -30,6 +31,7 @@ public class RuleDTO extends DtoObject<Rule> {
         this.destination = entity.getDestinationFolder() != null ? new FolderDTO(entity.getDestinationFolder()) : null;
         this.value = entity.getValue();
     }
+
 
     public Long getId() {
         return id;
