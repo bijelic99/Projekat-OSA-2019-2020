@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service.serviceInterface;
 
 import java.util.List;
+import java.util.Set;
 
 import com.ftn.osa.projekat_osa.model.Folder;
 
@@ -14,4 +15,5 @@ public interface FolderServiceInterface {
 
     void remove(Long folderID);
 
+    Set<Folder> getInnerFolders(Long id);
 }

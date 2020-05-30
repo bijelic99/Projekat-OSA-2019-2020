@@ -2,6 +2,8 @@ package com.ftn.osa.projekat_osa.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,5 +81,12 @@ public class FolderController {
         } else {
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/{id}/innerFolders")
+    public ResponseEntity<Set<FolderDTO>> getInnerFolders(@PathVariable("id") Long id){
+        Set<Folder> folders = folderService.getInnerFolders(id);
+        return new ResponseEntity<>(folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet()),
+                HttpStatus.OK);
     }
 }

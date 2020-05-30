@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,11 @@ public class FolderService implements FolderServiceInterface {
     @Override
     public void remove(Long folderID) {
         folderRepository.deleteById(folderID);
+    }
+
+    @Override
+    public Set<Folder> getInnerFolders(Long id) {
+        return folderRepository.getInnerFolders(id);
     }
 
 
