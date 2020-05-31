@@ -1,7 +1,6 @@
 package com.ftn.osa.projekat_osa.service.serviceInterface;
 
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
-import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Message;
 
@@ -14,4 +13,6 @@ public interface MailServiceInterface {
     public Set<Folder> getWholeFolderTree(Long accountId) throws ResourceNotFoundException, MessagingException;
 
     public Folder addFolderToDb(Folder folder, Folder parentFolder);
+
+    Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException;
 }

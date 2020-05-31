@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.mail_utill;
 
+import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.InServerType;
 import com.ftn.osa.projekat_osa.model.Message;
@@ -10,6 +11,8 @@ import javax.activation.DataHandler;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.mail.util.ByteArrayDataSource;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -141,5 +144,55 @@ public class MailUtility{
 
     private void setSession(Session session) {
         this.session = session;
+    }
+
+    public Map<String, Object> syncFolder(Stack<String> folderPath, LocalDateTime latestMessageTimestamp, List<String> existingFoldersNameList, com.ftn.osa.projekat_osa.model.Folder folder) throws MessagingException, ResourceNotFoundException {
+        if (getSession() == null) startSession();
+        Store store = getSession().getStore(account.getInServerType() == InServerType.POP3 ? "pop3" : account.getInServerType() == InServerType.IMAP ? "imap" : null);
+        store.connect(getAccount().getUsername(), getAccount().getPassword());
+
+
+            Folder f = store.getDefaultFolder();
+            while (!folderPath.empty()){
+                f = f.getFolder(folderPath.pop());
+            }
+            List<Message> messages = new ArrayList<>();
+            if (f.getType() == Folder.HOLDS_MESSAGES || f.getType() == 3) {
+                f.open(Folder.READ_ONLY);
+                messages = Arrays.stream(f.getMessages())
+                        .map(message -> {
+                            try {
+                                return MailUtilityHelper.mailClientMessageToJpaEntityMessage(message, getAccount());
+                            } catch (MessagingException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        })
+                        .filter(message -> message != null)
+                        .filter(message -> latestMessageTimestamp == null ||  message.getDateTime().isAfter(latestMessageTimestamp))
+                        .collect(Collectors.toList());
+                if(f.isOpen()) f.close();
+            }
+            List<com.ftn.osa.projekat_osa.model.Folder> folders = Arrays.stream(f.list())
+                    .filter(folder1 -> !existingFoldersNameList.contains(folder1.getName()))
+                    .map(folder1 -> {
+                        try {
+                            return MailUtilityHelper.mailClientFolderToJpaEntityFolder(folder1, folder, getAccount());
+                        } catch (MessagingException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    })
+                    .filter(folder1 -> folder1 != null)
+                    .collect(Collectors.toList());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("messages", messages);
+            map.put("folders", folders);
+
+            return map;
+
     }
 }

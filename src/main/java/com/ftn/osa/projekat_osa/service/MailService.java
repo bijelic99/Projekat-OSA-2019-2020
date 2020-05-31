@@ -9,15 +9,13 @@ import com.ftn.osa.projekat_osa.repository.AccountRepository;
 import com.ftn.osa.projekat_osa.repository.FolderRepository;
 import com.ftn.osa.projekat_osa.repository.MessageRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
+import com.ftn.osa.projekat_osa.utillity.FolderHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,4 +79,46 @@ public class MailService implements MailServiceInterface {
 
         return folder;
     }
+
+    @Override
+    public Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException {
+        Folder folder = folderRepository.getOne(id);
+        Stack<String> folderPath = FolderHelper.getFolderPathStack(folder, new Stack<>());
+        LocalDateTime latestMessageTimestamp = folder.getMessages().stream()
+                .map(message -> message.getDateTime())
+                .max((o1, o2) -> o1.isAfter(o2) ? 1 : o1.isBefore(o2) ? -1 : 0)
+                .orElse(null);
+
+        List<String> existingFoldersNameList = folder.getFolders().stream()
+                .map(folder1 -> folder1.getName())
+                .collect(Collectors.toList());
+
+        Folder rootFolder = FolderHelper.getRootFolder(folder);
+
+        Optional<Account> optionalAccount = accountRepository.getAccountFromAccountFolder(rootFolder.getId());
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
+            MailUtility mailUtility = new MailUtility(account);
+            Map<String, Object> map = mailUtility.syncFolder(folderPath, latestMessageTimestamp, existingFoldersNameList, folder);
+
+            List<Message> messages = (List<Message>) map.get("messages");
+
+            List<Folder> folders = (List<Folder>) map.get("folders");
+
+            messages = messageRepository.saveAll(messages);
+            folders = folders.stream().map(folder1 -> addFolderToDb(folder1, folder)).collect(Collectors.toList());
+
+            folder.getMessages().addAll(messages);
+            folder.getFolders().addAll(folders);
+
+
+            return folderRepository.save(folder);
+
+        }
+        else throw new ResourceNotFoundException("Account not found");
+
+
+    }
+
+
 }

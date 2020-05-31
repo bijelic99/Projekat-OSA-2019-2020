@@ -2,9 +2,13 @@ package com.ftn.osa.projekat_osa.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
+import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
+
+import javax.mail.MessagingException;
 
 @RestController
 @RequestMapping(value = "api/folders")
@@ -88,5 +94,16 @@ public class FolderController {
         Set<Folder> folders = folderService.getInnerFolders(id);
         return new ResponseEntity<>(folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet()),
                 HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}/sync", consumes = "application/json")
+    public ResponseEntity<Map<String, Object>> syncFolder(@PathVariable("id") Long id, @RequestBody Map<String, Object> data) throws ResourceNotFoundException, MessagingException {
+        Map<String, Object> map = folderService.syncFolder(id, data);
+        List<Message> messages = (List<Message>) map.get("messages");
+        List<Folder> folders = (List<Folder>) map.get("folders");
+        map.put("messages", messages.stream().map(message -> new MessageDTO(message)).collect(Collectors.toList()));
+        map.put("folders", folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toList()));
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }

@@ -6,10 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.Set;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("select a.accountFolders from Account a where a.id = :id")
     Set<Folder> getAccountFolders(@Param("id") Long accountId);
+
+    @Query("select a from Account a join a.accountFolders f where f.id = :folderId")
+    Optional<Account> getAccountFromAccountFolder(@Param("folderId") Long folderId);
 }
