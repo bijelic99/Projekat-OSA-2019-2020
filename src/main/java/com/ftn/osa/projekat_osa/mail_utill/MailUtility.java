@@ -1,9 +1,11 @@
 package com.ftn.osa.projekat_osa.mail_utill;
 
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.InServerType;
 import com.ftn.osa.projekat_osa.model.Message;
+import com.sun.mail.imap.IMAPStore;
 import com.sun.mail.pop3.POP3Folder;
 import com.sun.mail.pop3.POP3Store;
 
@@ -194,5 +196,71 @@ public class MailUtility{
 
             return map;
 
+    }
+
+    public Set<Message> getMessages() throws WrongProtocolException, MessagingException {
+        Set<Message> messages = new HashSet<>();
+        switch (getAccount().getInServerType()){
+            case IMAP: messages = getImapMessages(); break;
+            case POP3: messages = getPop3Messages(); break;
+        }
+        return messages;
+    }
+
+    private Set<Message> getImapMessages() throws WrongProtocolException, MessagingException {
+        if(getAccount().getInServerType() != InServerType.IMAP) throw new WrongProtocolException("Wrong protocol used to get messages");
+        if (getSession() == null) startSession();
+        IMAPStore store = (IMAPStore) getSession().getStore(account.getInServerType() == InServerType.POP3 ? "pop3" : account.getInServerType() == InServerType.IMAP ? "imap" : null);
+        store.connect(getAccount().getUsername(), getAccount().getPassword());
+        Folder folder = Arrays.stream(store.getDefaultFolder().list())
+                .filter(folder1 -> folder1.getName().toLowerCase().contains("inbox"))
+                .findFirst()
+                .orElse(null);
+        folder.open(Folder.READ_ONLY);
+        Set<Message> messages = Arrays.stream(folder.getMessages())
+                .map(message -> {
+                    try {
+                        return MailUtilityHelper.mailClientMessageToJpaEntityMessage(message, getAccount());
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .filter(message -> message != null)
+                .collect(Collectors.toSet());
+        folder.close();
+        setSession(null);
+        return messages;
+    }
+
+    private Set<Message> getPop3Messages() throws WrongProtocolException, MessagingException {
+        if(getAccount().getInServerType() != InServerType.POP3) throw new WrongProtocolException("Wrong protocol used to get messages");
+        if (getSession() == null) startSession();
+        POP3Store store = (POP3Store) getSession().getStore(account.getInServerType() == InServerType.POP3 ? "pop3" : account.getInServerType() == InServerType.IMAP ? "imap" : null);
+        store.connect(getAccount().getUsername(), getAccount().getPassword());
+        Folder folder = store.getFolder("INBOX");
+        folder.open(Folder.READ_ONLY);
+        Set<Message> messages = Arrays.stream(folder.getMessages())
+                .map(message -> {
+                    try {
+                        return MailUtilityHelper.mailClientMessageToJpaEntityMessage(message, getAccount());
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                })
+                .filter(message -> message != null)
+                .collect(Collectors.toSet());
+        folder.close();
+        setSession(null);
+        return messages;
+    }
+
+    public Set<Message> getNewMessages(LocalDateTime time) throws WrongProtocolException, MessagingException {
+        return getMessages().stream().filter(message -> message.getDateTime().isAfter(time)).collect(Collectors.toSet());
     }
 }

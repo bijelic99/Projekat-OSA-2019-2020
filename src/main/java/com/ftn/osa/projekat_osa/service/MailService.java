@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.mail_utill.MailUtility;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
@@ -118,6 +119,28 @@ public class MailService implements MailServiceInterface {
         else throw new ResourceNotFoundException("Account not found");
 
 
+    }
+
+    @Override
+    public Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException {
+        Account account = accountRepository.getOne(accountId);
+        MailUtility mailUtility = new MailUtility(account);
+        Set<Message> messages = mailUtility.getMessages();
+        messages = new HashSet<>(messageRepository.saveAll(messages));
+
+
+        return messages;
+    }
+
+    @Override
+    public Set<Message> getNewMessages(Long accountId, LocalDateTime latestTimestamp) throws WrongProtocolException, MessagingException {
+        Account account = accountRepository.getOne(accountId);
+        MailUtility mailUtility = new MailUtility(account);
+        Set<Message> messages = mailUtility.getNewMessages(latestTimestamp);
+        messages = new HashSet<>(messageRepository.saveAll(messages));
+
+
+        return messages;
     }
 
 

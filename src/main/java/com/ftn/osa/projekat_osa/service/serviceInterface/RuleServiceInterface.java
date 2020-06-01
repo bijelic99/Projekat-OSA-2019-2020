@@ -13,4 +13,6 @@ public interface RuleServiceInterface {
     Rule save(Rule rule);
 
     void remove(Long ruleID);
+
+    void executeRuleSet(Long accountId);
 }

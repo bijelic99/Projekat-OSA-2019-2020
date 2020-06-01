@@ -26,6 +26,22 @@ public class Account extends JpaEntity {
     private String displayName;
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Folder> accountFolders;
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Rule> accountRules;
+
+    public Account(Long id, String smtpAddress, String smtpPort, InServerType inServerType, String inServerAddress, Integer inServerPort, String username, String password, String displayName, Set<Folder> accountFolders, Set<Rule> accountRules) {
+        super(id);
+        this.smtpAddress = smtpAddress;
+        this.smtpPort = smtpPort;
+        this.inServerType = inServerType;
+        this.inServerAddress = inServerAddress;
+        this.inServerPort = inServerPort;
+        this.username = username;
+        this.password = password;
+        this.displayName = displayName;
+        this.accountFolders = accountFolders;
+        this.accountRules = accountRules;
+    }
 
     public Account(Long id, String smtpAddress, String smtpPort, InServerType inServerType, String inServerAddress, Integer inServerPort, String username, String password, String displayName, Set<Folder> accountFolders) {
         super(id);
@@ -38,6 +54,15 @@ public class Account extends JpaEntity {
         this.password = password;
         this.displayName = displayName;
         this.accountFolders = accountFolders;
+        this.accountRules = new HashSet<>();
+    }
+
+    public Set<Rule> getAccountRules() {
+        return accountRules;
+    }
+
+    public void setAccountRules(Set<Rule> accountRules) {
+        this.accountRules = accountRules;
     }
 
     public Account() {

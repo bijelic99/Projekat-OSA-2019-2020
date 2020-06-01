@@ -6,7 +6,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
+import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +53,15 @@ public class AccountController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO) {
+    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO) throws WrongProtocolException, MessagingException {
         Account account = accountDTO.getJpaEntity();
-
         account = accountService.save(account);
+
         return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
-    public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable("id") Long accountId) {
+    public ResponseEntity<AccountDTO> updateAccount(@RequestBody AccountDTO accountDTO, @PathVariable("id") Long accountId) throws WrongProtocolException, MessagingException {
         Account account = accountService.getOne(accountDTO.getId());
 
         if (account == null) {
@@ -104,5 +106,12 @@ public class AccountController {
     public ResponseEntity<Set<FolderDTO>> getAccountFolders(@PathVariable("id") Long accountId){
         Set<Folder> folders = accountService.getAccountFolders(accountId);
         return new ResponseEntity<>(folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet()), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/messages")
+    public ResponseEntity<Set<MessageDTO>> getMessages(@PathVariable("id") Long accountId) throws WrongProtocolException, MessagingException {
+        return new ResponseEntity<>(mailService.getAllMessages(accountId).stream()
+                .map(message -> new MessageDTO(message))
+                .collect(Collectors.toSet()), HttpStatus.OK);
     }
 }

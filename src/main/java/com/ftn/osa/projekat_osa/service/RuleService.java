@@ -1,7 +1,9 @@
 package com.ftn.osa.projekat_osa.service;
 
 import java.util.List;
+import java.util.Set;
 
+import com.ftn.osa.projekat_osa.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,12 @@ public class RuleService implements RuleServiceInterface {
     @Override
     public void remove(Long ruleID) {
         ruleRepository.deleteById(ruleID);
+    }
+
+    @Override
+    public void executeRuleSet(Long accountId, Set<Message> messages) {
+        Set<Rule> rules = ruleRepository.getAccountRules(accountId);
+
     }
 
 
