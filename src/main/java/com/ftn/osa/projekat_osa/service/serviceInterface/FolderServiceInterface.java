@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
 
 import javax.mail.MessagingException;
@@ -21,5 +22,5 @@ public interface FolderServiceInterface {
 
     Set<Folder> getInnerFolders(Long id);
 
-    Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException;
+    Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException;
 }

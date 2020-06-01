@@ -6,7 +6,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
+import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Message;
+import com.ftn.osa.projekat_osa.repository.AccountRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
 import com.ftn.osa.projekat_osa.utillity.FolderHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class FolderService implements FolderServiceInterface {
 
     @Autowired
     MailServiceInterface mailServiceInterface;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @Override
     public Folder getOne(Long folderID) {
@@ -74,7 +80,7 @@ public class FolderService implements FolderServiceInterface {
      * @throws NullPointerException ukoliko je folder list null
      */
     @Override
-    public Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException {
+    public Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
 
         String strLatestMessageTimestamp = (String) data.get("latestMessageTimestamp");
         LocalDateTime latestMessageTimestamp = strLatestMessageTimestamp != null ? LocalDateTime.parse(strLatestMessageTimestamp, DateTimeFormatter.ISO_DATE_TIME) : null;
@@ -83,21 +89,32 @@ public class FolderService implements FolderServiceInterface {
 
         if(folderList == null) throw new NullPointerException("Folder list cannot be null");
 
-        Folder f = mailServiceInterface.syncFolder(id);
+        Folder rootFolder = FolderHelper.getRootFolder(folderRepository.getOne(id));
+        Optional<Account> optionalAccount = accountRepository.getAccountFromAccountFolder(rootFolder.getId());
+        if(optionalAccount.isPresent()){
+            Account account = optionalAccount.get();
+            mailServiceInterface.getNewMessages(account.getId());
 
-        List<Message> messages = f.getMessages().stream()
-                .filter(message -> latestMessageTimestamp == null || message.getDateTime().isAfter(latestMessageTimestamp))
-                .collect(Collectors.toList());
+            Folder f = folderRepository.getOne(id);
 
-        List<Folder> folders = f.getFolders().stream()
-                .filter(folder -> !folderList.contains(folder.getId()))
-                .collect(Collectors.toList());
+            List<Message> messages = f.getMessages().stream()
+                    .filter(message -> latestMessageTimestamp == null || message.getDateTime().isAfter(latestMessageTimestamp))
+                    .collect(Collectors.toList());
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("messages", messages);
-        map.put("folders", folders);
+            List<Folder> folders = f.getFolders().stream()
+                    .filter(folder -> !folderList.contains(folder.getId()))
+                    .collect(Collectors.toList());
 
-        return map;
+            Map<String, Object> map = new HashMap<>();
+            map.put("messages", messages);
+            map.put("folders", folders);
+
+            return map;
+        }
+        else throw new ResourceNotFoundException("Account not found");
+
+
+
 
     }
 

@@ -42,7 +42,7 @@ public class AccountService implements AccountServiceInterface {
     public Account save(Account account) throws WrongProtocolException, MessagingException {
         account = accountRepository.save(account);
         Folder indexFolder = new Folder();
-        indexFolder.setName("Index");
+        indexFolder.setName("Inbox");
         indexFolder = folderServiceInterface.save(indexFolder);
 
         Set<Message> messages = mailServiceInterface.getAllMessages(account.getId());

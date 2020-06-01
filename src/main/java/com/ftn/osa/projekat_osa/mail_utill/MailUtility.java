@@ -261,6 +261,10 @@ public class MailUtility{
     }
 
     public Set<Message> getNewMessages(LocalDateTime time) throws WrongProtocolException, MessagingException {
-        return getMessages().stream().filter(message -> message.getDateTime().isAfter(time)).collect(Collectors.toSet());
+        if(time != null) return getMessages().stream()
+                .filter(message -> message.getDateTime().isAfter(time))
+                .collect(Collectors.toSet());
+
+        else return getMessages();
     }
 }

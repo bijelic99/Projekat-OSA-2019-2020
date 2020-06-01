@@ -137,4 +137,10 @@ public class Message extends JpaEntity {
     public void setAccount(Account account) {
         this.account = account;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.getId().equals(((Message)obj).getId());
+    }
+
 }

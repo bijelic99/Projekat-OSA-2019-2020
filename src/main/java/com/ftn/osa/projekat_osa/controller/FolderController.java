@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
+import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,7 +98,7 @@ public class FolderController {
     }
 
     @PutMapping(value = "/{id}/sync", consumes = "application/json")
-    public ResponseEntity<Map<String, Object>> syncFolder(@PathVariable("id") Long id, @RequestBody Map<String, Object> data) throws ResourceNotFoundException, MessagingException {
+    public ResponseEntity<Map<String, Object>> syncFolder(@PathVariable("id") Long id, @RequestBody Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
         Map<String, Object> map = folderService.syncFolder(id, data);
         List<Message> messages = (List<Message>) map.get("messages");
         List<Folder> folders = (List<Folder>) map.get("folders");

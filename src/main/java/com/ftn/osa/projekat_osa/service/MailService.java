@@ -31,6 +31,9 @@ public class MailService implements MailServiceInterface {
     @Autowired
     FolderRepository folderRepository;
 
+    @Autowired
+    RuleService ruleService;
+
     @Override
     public Message sendMessage(Message message) throws ResourceNotFoundException, MessagingException {
         Optional<Account> optionalAccount =  accountRepository.findById(message.getAccount().getId());
@@ -121,6 +124,14 @@ public class MailService implements MailServiceInterface {
 
     }
 
+    /**
+     * Trebalo bi da se poziva iskljucivo kada se doda novi account.
+     * Dobavlja sve mailove u index folderu na mail clientu
+     * @param accountId id accounta za koji je potrebno dobaviti emailove
+     * @return Set sa svim mailovima u index folderu na mail clientu
+     * @throws WrongProtocolException
+     * @throws MessagingException
+     */
     @Override
     public Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException {
         Account account = accountRepository.getOne(accountId);
@@ -132,15 +143,36 @@ public class MailService implements MailServiceInterface {
         return messages;
     }
 
+    /**
+     * Ucitava nove emailove u index folder prosledjenog accounta
+     * @param accountId id accounta za koji je potrebno dobaviti emailove
+     * @return  nove poruke, takodje cuva poruke u index folder
+     * @throws WrongProtocolException
+     * @throws MessagingException
+     */
     @Override
-    public Set<Message> getNewMessages(Long accountId, LocalDateTime latestTimestamp) throws WrongProtocolException, MessagingException {
+    public Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException {
         Account account = accountRepository.getOne(accountId);
+
+        Folder indexFolder = account.getAccountFolders().stream()
+                .filter(folder -> folder.getName().toLowerCase().equals("inbox"))
+                .findFirst()
+                .get();
+
+        LocalDateTime latestTimestamp = indexFolder.getMessages().stream()
+                .map(message -> message.getDateTime())
+                .max((o1, o2) -> o1.isAfter(o2) ? 1 : o1.isBefore(o2) ? -1 : 0)
+                .orElse(null);
+
         MailUtility mailUtility = new MailUtility(account);
         Set<Message> messages = mailUtility.getNewMessages(latestTimestamp);
         messages = new HashSet<>(messageRepository.saveAll(messages));
+        indexFolder.getMessages().addAll(messages);
 
-
-        return messages;
+        ruleService.executeRuleSet(accountId, messages);
+        Set<Message> messages1 = folderRepository.getOne(indexFolder.getId()).getMessages();
+        Set<Message> finalMessages = messages;
+        return messages1.stream().filter(message -> finalMessages.contains(message)).collect(Collectors.toSet());
     }
 
 
