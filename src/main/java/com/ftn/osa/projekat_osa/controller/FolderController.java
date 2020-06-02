@@ -10,6 +10,7 @@ import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Message;
+import com.ftn.osa.projekat_osa.utillity.FolderSyncWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,13 +99,25 @@ public class FolderController {
     }
 
     @PutMapping(value = "/{id}/sync", consumes = "application/json")
-    public ResponseEntity<Map<String, Object>> syncFolder(@PathVariable("id") Long id, @RequestBody Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+    public ResponseEntity<FolderSyncWrapper> syncFolder(@PathVariable("id") Long id, @RequestBody Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+
+
         Map<String, Object> map = folderService.syncFolder(id, data);
+
+
         List<Message> messages = (List<Message>) map.get("messages");
         List<Folder> folders = (List<Folder>) map.get("folders");
-        map.put("messages", messages.stream().map(message -> new MessageDTO(message)).collect(Collectors.toList()));
-        map.put("folders", folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toList()));
+        FolderSyncWrapper returnData = new FolderSyncWrapper(
+                messages.stream()
+                        .map(message -> new MessageDTO(message))
+                        .collect(Collectors.toList()),
+                folders.stream()
+                        .map(folder -> new FolderDTO(folder))
+                        .collect(Collectors.toList()));
 
-        return new ResponseEntity<>(map, HttpStatus.OK);
+
+        return new ResponseEntity<>(returnData, HttpStatus.OK);
     }
+
+
 }

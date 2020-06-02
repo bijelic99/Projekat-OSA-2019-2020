@@ -16,4 +16,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("select a from Account a join a.accountFolders f where f.id = :folderId")
     Optional<Account> getAccountFromAccountFolder(@Param("folderId") Long folderId);
+
+    @Query("select f from Account a join a.accountFolders f where a.id = :id and f.name = 'Inbox'")
+    Optional<Folder> getAccountIndexFolder(@Param("id") Long id);
 }

@@ -20,5 +20,5 @@ public interface MailServiceInterface {
 
     Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException;
 
-    Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException;
+    Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException, ResourceNotFoundException;
 }

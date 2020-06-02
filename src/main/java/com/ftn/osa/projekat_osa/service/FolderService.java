@@ -58,27 +58,7 @@ public class FolderService implements FolderServiceInterface {
         return folderRepository.getInnerFolders(id);
     }
 
-    /**
-     * <p>
-     *     Funkcija sluzi za sinhronizaciju foldera sa backendom i mail serverom.
-     * </p>
-     * <p>
-     *     Izvrsava se u sledecim koracima:
-     *     <ol>
-     *         <li>
-     *             Salje folderId MailService-u gde se fetchuju novi mailovi i folderi sa mail servera i ubacuju u bazu,
-     *             vraca update-ovani folder
-     *         </li>
-     *         <li>
-     *             Filtrira one mailove i foldere koji su potrebni korisniku i vraca ih u mapi
-     *         </li>
-     *     </ol>
-     * </p>
-     * @param id id foldera
-     * @param data mapa koja se sastoji iz polja "latestMessageTimestamp" tipa LocalDateTime i "folderList" tipa List&lt;Long&gt;
-     * @return  Mapa sa poljima "folders" tipa List&lt;Folder&gt; i "messages" tipa List&lt;Message&gt;
-     * @throws NullPointerException ukoliko je folder list null
-     */
+
     @Override
     public Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
 
