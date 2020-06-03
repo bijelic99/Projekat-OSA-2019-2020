@@ -1,5 +1,7 @@
 package com.ftn.osa.projekat_osa.model;
 
+import com.sun.istack.Nullable;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +12,7 @@ public class Folder extends JpaEntity {
     @Column(nullable = false)
     private String name;
     @ManyToOne(fetch = FetchType.LAZY)
+    @Nullable
     private Folder parentFolder;
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Message> messages;

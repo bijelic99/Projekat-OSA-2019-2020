@@ -59,7 +59,10 @@ public class FolderController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<FolderDTO> saveFolder(@RequestBody FolderDTO folderDTO) {
         Folder folder = folderDTO.getJpaEntity();
+        if(folder.getParentFolder().getId() == null) {
+            folder.setParentFolder(null);
 
+        }
         folder = folderService.save(folder);
         return new ResponseEntity<FolderDTO>(new FolderDTO(folder), HttpStatus.OK);
     }

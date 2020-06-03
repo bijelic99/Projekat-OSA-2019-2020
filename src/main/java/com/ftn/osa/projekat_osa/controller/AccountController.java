@@ -11,6 +11,7 @@ import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.service.MailService;
+import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,9 @@ public class AccountController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private FolderServiceInterface folderServiceInterface;
 
     @GetMapping
     public ResponseEntity<List<AccountDTO>> getAccounts() {
@@ -113,5 +117,17 @@ public class AccountController {
         return new ResponseEntity<>(mailService.getAllMessages(accountId).stream()
                 .map(message -> new MessageDTO(message))
                 .collect(Collectors.toSet()), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/{id}/folders", consumes = "application/json")
+    public ResponseEntity<FolderDTO> addAccountFolder(@PathVariable("id") Long accountId, @RequestBody FolderDTO folderDTO) throws WrongProtocolException, MessagingException {
+        Folder folder = folderDTO.getJpaEntity();
+        folder.setParentFolder(null);
+        folder = folderServiceInterface.save(folder);
+        Account account = accountService.getOne(accountId);
+        account.getAccountFolders().add(folder);
+        accountService.save(account);
+
+        return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
     }
 }
