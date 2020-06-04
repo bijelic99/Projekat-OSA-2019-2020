@@ -40,6 +40,11 @@ public class AccountService implements AccountServiceInterface {
 
     @Override
     public Account save(Account account) throws WrongProtocolException, MessagingException {
+        return accountRepository.save(account);
+    }
+
+    @Override
+    public Account add(Account account) throws WrongProtocolException, MessagingException {
         account = accountRepository.save(account);
         Folder indexFolder = new Folder();
         indexFolder.setName("Inbox");
@@ -68,6 +73,11 @@ public class AccountService implements AccountServiceInterface {
     @Override
     public Set<Folder> getAccountFolders(Long accountId) {
         return accountRepository.getAccountFolders(accountId);
+    }
+
+    @Override
+    public Folder getIndexFolder(Long accountID) {
+        return accountRepository.getAccountIndexFolder(accountID);
     }
 
 }

@@ -15,7 +15,11 @@ public interface AccountServiceInterface {
 
     public Account save(Account account) throws WrongProtocolException, MessagingException;
 
+    public Account add(Account account) throws WrongProtocolException, MessagingException;
+
     public void remove(Long accountId);
 
     public Set<Folder> getAccountFolders(Long accountId);
+
+    public Folder getIndexFolder(Long accountID);
 }

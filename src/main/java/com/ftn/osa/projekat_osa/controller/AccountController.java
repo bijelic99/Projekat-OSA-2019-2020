@@ -10,6 +10,7 @@ import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
+import com.ftn.osa.projekat_osa.model.Message;
 import com.ftn.osa.projekat_osa.service.MailService;
 import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class AccountController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO) throws WrongProtocolException, MessagingException {
         Account account = accountDTO.getJpaEntity();
-        account = accountService.save(account);
+        account = accountService.add(account);
 
         return new ResponseEntity<AccountDTO>(new AccountDTO(account), HttpStatus.CREATED);
     }
@@ -121,13 +122,21 @@ public class AccountController {
 
     @PostMapping(value = "/{id}/folders", consumes = "application/json")
     public ResponseEntity<FolderDTO> addAccountFolder(@PathVariable("id") Long accountId, @RequestBody FolderDTO folderDTO) throws WrongProtocolException, MessagingException {
-        Folder folder = folderDTO.getJpaEntity();
-        folder.setParentFolder(null);
-        folder = folderServiceInterface.save(folder);
-        Account account = accountService.getOne(accountId);
-        account.getAccountFolders().add(folder);
-        accountService.save(account);
 
-        return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
+            Folder folder = folderDTO.getJpaEntity();
+            folder.setParentFolder(null);
+            folder = folderServiceInterface.save(folder);
+            Account account = accountService.getOne(accountId);
+            account.getAccountFolders().add(folder);
+            accountService.save(account);
+
+            return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
+
+    }
+
+    @GetMapping(value = "/{id}/messages")
+    public ResponseEntity<Set<MessageDTO>> getAccountMessages(@PathVariable("id") Long accountId){
+        Set<Message> messages = accountService.getIndexFolder(accountId).getMessages();
+        return new ResponseEntity<>(messages.stream().map(message -> new MessageDTO(message)), HttpStatus.OK);
     }
 }
