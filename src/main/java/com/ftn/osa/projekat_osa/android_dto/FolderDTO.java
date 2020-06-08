@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 public class FolderDTO extends DtoObject<Folder> {
     private Long id;
     private String name;
-    private Long parentFolder;
-    private Set<Long> folders;
+    private FolderMetadataDTO parentFolder;
+    private Set<FolderMetadataDTO> folders;
     private Set<MessageDTO> messages;
 
     public FolderDTO() {
@@ -20,7 +20,7 @@ public class FolderDTO extends DtoObject<Folder> {
         messages = new HashSet<>();
     }
 
-    public FolderDTO(Long id, String name, Long parentFolder, Set<Long> folders, Set<MessageDTO> messages) {
+    public FolderDTO(Long id, String name, FolderMetadataDTO parentFolder, Set<FolderMetadataDTO> folders, Set<MessageDTO> messages) {
         this.id = id;
         this.name = name;
         this.parentFolder = parentFolder;
@@ -32,11 +32,15 @@ public class FolderDTO extends DtoObject<Folder> {
         this();
         this.id = entity.getId();
         this.name = entity.getName();
-        this.parentFolder = entity.getParentFolder() != null ? entity.getParentFolder().getId() : null;
-        if (entity.getFolders().size() > 0)
-            this.folders = entity.getFolders().stream().map(folder -> folder.getId()).collect(Collectors.toSet());
-        if (entity.getMessages().size() > 0)
-            this.messages = entity.getMessages().stream().map(message -> new MessageDTO(message)).collect(Collectors.toSet());
+        Folder parentFolder = entity.getParentFolder();
+        this.parentFolder = parentFolder != null ? new FolderMetadataDTO(parentFolder) : null;
+        this.folders = entity.getFolders().stream()
+                .map(folder -> new FolderMetadataDTO(folder))
+                .collect(Collectors.toSet());
+        this.messages = entity.getMessages().stream()
+                .map(message -> new MessageDTO(message))
+                .collect(Collectors.toSet());
+
     }
 
 
@@ -57,11 +61,11 @@ public class FolderDTO extends DtoObject<Folder> {
     }
 
 
-    public Set<Long> getFolders() {
+    public Set<FolderMetadataDTO> getFolders() {
         return folders;
     }
 
-    public void setFolders(Set<Long> folders) {
+    public void setFolders(Set<FolderMetadataDTO> folders) {
         this.folders = folders;
     }
 
@@ -74,11 +78,11 @@ public class FolderDTO extends DtoObject<Folder> {
     }
 
 
-    public Long getParentFolder() {
+    public FolderMetadataDTO getParentFolder() {
         return parentFolder;
     }
 
-    public void setParentFolder(Long parentFolder) {
+    public void setParentFolder(FolderMetadataDTO parentFolder) {
         this.parentFolder = parentFolder;
     }
 
@@ -99,8 +103,9 @@ public class FolderDTO extends DtoObject<Folder> {
      */
     @Override
     public Folder getJpaEntity() {
-        return new Folder(this.getId(), this.getName(), new Folder(this.getParentFolder(), null, null, null, null),
-                this.getMessages().stream().map(message -> message.getJpaEntity()).collect(Collectors.toSet()),
-                this.getFolders().stream().map(folder -> new Folder(folder, null, null, null, null)).collect(Collectors.toSet()));
+        return new Folder(getId(), getName(), getParentFolder() != null ? getParentFolder().getJpaEntity() : null,
+                getMessages().stream().map(messageDTO -> messageDTO.getJpaEntity()).collect(Collectors.toSet()),
+                getFolders().stream().map(folderMetadataDTO -> folderMetadataDTO.getJpaEntity()).collect(Collectors.toSet())
+                );
     }
 }

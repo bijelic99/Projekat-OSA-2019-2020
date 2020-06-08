@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -77,7 +78,9 @@ public class AccountService implements AccountServiceInterface {
 
     @Override
     public Folder getIndexFolder(Long accountID) {
-        return accountRepository.getAccountIndexFolder(accountID);
+        Optional<Folder> optionalFolder = accountRepository.getAccountIndexFolder(accountID);
+        if (optionalFolder.isPresent()) return optionalFolder.get();
+        else return null;
     }
 
 }

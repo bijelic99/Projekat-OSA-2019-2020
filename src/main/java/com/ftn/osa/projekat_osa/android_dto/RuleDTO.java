@@ -9,14 +9,14 @@ public class RuleDTO extends DtoObject<Rule> {
     private Long id;
     private String condition;
     private String operation;
-    private FolderDTO destination;
+    private FolderMetadataDTO destination;
     private String value;
 
     public RuleDTO() {
 
     }
 
-    public RuleDTO(Long id, String condition, String operation, FolderDTO destination, String value) {
+    public RuleDTO(Long id, String condition, String operation, FolderMetadataDTO destination, String value) {
         this.id = id;
         this.condition = condition;
         this.operation = operation;
@@ -28,7 +28,7 @@ public class RuleDTO extends DtoObject<Rule> {
         this.id = entity.getId();
         this.condition = entity.getCondition().name();
         this.operation = entity.getOperation().name();
-        this.destination = entity.getDestinationFolder() != null ? new FolderDTO(entity.getDestinationFolder()) : null;
+        this.destination = entity.getDestinationFolder() != null ? new FolderMetadataDTO(entity.getDestinationFolder()) : null;
         this.value = entity.getValue();
     }
 
@@ -57,11 +57,11 @@ public class RuleDTO extends DtoObject<Rule> {
         this.operation = operation;
     }
 
-    public FolderDTO getDestination() {
+    public FolderMetadataDTO getDestination() {
         return destination;
     }
 
-    public void setDestination(FolderDTO destination) {
+    public void setDestination(FolderMetadataDTO destination) {
         this.destination = destination;
     }
 

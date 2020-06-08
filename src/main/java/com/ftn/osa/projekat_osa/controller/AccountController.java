@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
+import com.ftn.osa.projekat_osa.android_dto.FolderMetadataDTO;
 import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
@@ -108,9 +109,9 @@ public class AccountController {
     }
 
     @GetMapping(value = "/{id}/folders")
-    public ResponseEntity<Set<FolderDTO>> getAccountFolders(@PathVariable("id") Long accountId){
+    public ResponseEntity<Set<FolderMetadataDTO>> getAccountFolders(@PathVariable("id") Long accountId){
         Set<Folder> folders = accountService.getAccountFolders(accountId);
-        return new ResponseEntity<>(folders.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet()), HttpStatus.OK);
+        return new ResponseEntity<>(folders.stream().map(folder -> new FolderMetadataDTO(folder)).collect(Collectors.toSet()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}/messages")
@@ -132,11 +133,5 @@ public class AccountController {
 
             return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
 
-    }
-
-    @GetMapping(value = "/{id}/messages")
-    public ResponseEntity<Set<MessageDTO>> getAccountMessages(@PathVariable("id") Long accountId){
-        Set<Message> messages = accountService.getIndexFolder(accountId).getMessages();
-        return new ResponseEntity<>(messages.stream().map(message -> new MessageDTO(message)), HttpStatus.OK);
     }
 }

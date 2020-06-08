@@ -16,13 +16,13 @@ public class AccountDTO extends DtoObject<Account> {
     private String inServer;
     private String username;
     private String password;
-    private Set<FolderDTO> accountFolders;
+    private Set<FolderMetadataDTO> accountFolders;
 
     public AccountDTO() {
         this.accountFolders = new HashSet<>();
     }
 
-    public AccountDTO(Long id, String smtp, String inServerType, String inServer, String username, String password, Set<FolderDTO> folders) {
+    public AccountDTO(Long id, String smtp, String inServerType, String inServer, String username, String password, Set<FolderMetadataDTO> folders) {
         this.id = id;
         this.smtp = smtp;
         this.inServerType = inServerType;
@@ -43,7 +43,7 @@ public class AccountDTO extends DtoObject<Account> {
         this.inServer = sj.toString();
         this.username = entity.getUsername();
         this.password = entity.getPassword();
-        this.accountFolders = entity.getAccountFolders().stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
+        this.accountFolders = entity.getAccountFolders().stream().map(folder -> new FolderMetadataDTO(folder)).collect(Collectors.toSet());
     }
 
 
@@ -95,11 +95,11 @@ public class AccountDTO extends DtoObject<Account> {
         this.password = password;
     }
 
-    public Set<FolderDTO> getAccountFolders() {
+    public Set<FolderMetadataDTO> getAccountFolders() {
         return accountFolders;
     }
 
-    public void setAccountFolders(Set<FolderDTO> accountFolders) {
+    public void setAccountFolders(Set<FolderMetadataDTO> accountFolders) {
         this.accountFolders = accountFolders;
     }
 
