@@ -34,7 +34,7 @@ INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUE
 --INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(1, 'bcc', 'cc', 'new content', "from", 'subject1', 'to1', 0, 1);
 --INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(2, 'bcc1', 'cc1', 'new content1', "from", 'subject2', 'to2', 1, 2);
 
---INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(3, 'fake.petar.petrovic@gmail.com, mailtestib887@gmail.com', 'mailtestib887@gmail.com', 'Test email from OSA project', 'fake.petar.petrovic@gmail.com', 'Success? Fail? Hotel Trivago', 'mailtestib887@gmail.com', 1, 3);
+INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(3, 'fake.petar.petrovic@gmail.com, mailtestib887@gmail.com', 'mailtestib887@gmail.com', 'Test email from OSA project', 'fake.petar.petrovic@gmail.com', 'Success? Fail? Hotel Trivago', 'mailtestib887@gmail.com', 1, 3);
 
 INSERT INTO attachments(id, data, mime_type, name) VALUES(1, 'data1', 'mime type1', 'name1');
 INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type2', 'name2');
@@ -44,7 +44,7 @@ INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type
 --INSERT INTO contacts_contact_photos(contact_id, contact_photos_id) VALUE(1, null);
 
 --INSERT INTO folders_messages(folder_id, messages_id) VALUES(1,1);
---INSERT INTO folders_messages(folder_id, messages_id) VALUES(2,2);
+INSERT INTO folders_messages(folder_id, messages_id) VALUES(3,3);
 
 --INSERT INTO messages_attachments(message_id, attachments_id) VALUES(1,1);
 --INSERT INTO messages_attachments(message_id, attachments_id) VALUES(2,2);

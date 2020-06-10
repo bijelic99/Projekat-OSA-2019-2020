@@ -64,8 +64,9 @@ public class FolderService implements FolderServiceInterface {
 
         String strLatestMessageTimestamp = (String) data.get("latestMessageTimestamp");
         LocalDateTime latestMessageTimestamp = strLatestMessageTimestamp != null ? LocalDateTime.parse(strLatestMessageTimestamp, DateTimeFormatter.ISO_DATE_TIME) : null;
-        List<Long> folderList = ((List<Integer>) data.get("folderList")).stream()
-                .map(integer -> Long.valueOf(integer)).collect(Collectors.toList());
+
+        List<Object> objectList = (List<Object>) data.get("folder_list");
+        List<Long> folderList = objectList.stream().map(o -> (Long) o).collect(Collectors.toList());
 
         if(folderList == null) throw new NullPointerException("Folder list cannot be null");
 
