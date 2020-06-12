@@ -14,13 +14,16 @@ public class Rule extends JpaEntity {
     private Operation operation;
     @ManyToOne
     private Folder destinationFolder;
+    @ManyToOne
+    private Folder targetFolder;
 
-    public Rule(Long id, Condition condition, String value, Operation operation, Folder destinationFolder) {
+    public Rule(Long id, Condition condition, String value, Operation operation, Folder destinationFolder, Folder targetFolder) {
         super(id);
         this.condition = condition;
         this.value = value;
         this.operation = operation;
         this.destinationFolder = destinationFolder;
+        this.targetFolder = targetFolder;
     }
 
     public Rule() {
@@ -56,5 +59,13 @@ public class Rule extends JpaEntity {
 
     public void setDestinationFolder(Folder destinationFolder) {
         this.destinationFolder = destinationFolder;
+    }
+
+    public Folder getTargetFolder() {
+        return targetFolder;
+    }
+
+    public void setTargetFolder(Folder targetFolder) {
+        this.targetFolder = targetFolder;
     }
 }

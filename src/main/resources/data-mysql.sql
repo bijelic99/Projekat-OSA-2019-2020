@@ -52,7 +52,7 @@ INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type
 --INSERT INTO messages_tags(message_id, tags_id) VALUES(1,3);
 --INSERT INTO messages_tags(message_id, tags_id) VALUES(2,4);
 
-INSERT INTO rules(id, _condition, operation, value, destination_folder_id) VALUES(1, 1, 2, 'value1', 1);
+INSERT INTO rules(id, _condition, operation, value, destination_folder_id, target_folder_id) VALUES(1, 1, 2, 'value1', 1, 2);
 
 INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(1, 1);
 INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(2, 2);
