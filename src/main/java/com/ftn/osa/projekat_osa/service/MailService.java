@@ -11,6 +11,7 @@ import com.ftn.osa.projekat_osa.repository.FolderRepository;
 import com.ftn.osa.projekat_osa.repository.MessageRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
 import com.ftn.osa.projekat_osa.utillity.FolderHelper;
+import com.ftn.osa.projekat_osa.utillity.MessageComparatorByDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MailService implements MailServiceInterface {
@@ -137,10 +139,20 @@ public class MailService implements MailServiceInterface {
         Account account = accountRepository.getOne(accountId);
         MailUtility mailUtility = new MailUtility(account);
         Set<Message> messages = mailUtility.getMessages();
-        messages = new HashSet<>(messageRepository.saveAll(messages));
+        Set<Message> currentMessages = accountRepository.getAccountMessages(accountId);
+        Set<Message> finalCurrentMessages = currentMessages;
+        Set<Message> newMessages = messages.stream()
+                .filter(message -> !finalCurrentMessages.parallelStream()
+                        .reduce(false,
+                                (aBoolean, message1) -> aBoolean || (MessageComparatorByDateTime.compareObjects(message, message1) == 0),
+                                (aBoolean, aBoolean2) -> aBoolean || aBoolean2)
+                )
+                .collect(Collectors.toSet());
+        messageRepository.saveAll(newMessages);
 
+        currentMessages = accountRepository.getAccountMessages(accountId);
 
-        return messages;
+        return currentMessages;
     }
 
     /**

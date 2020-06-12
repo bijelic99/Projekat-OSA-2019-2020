@@ -2,6 +2,7 @@ package com.ftn.osa.projekat_osa.repository;
 
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
+import com.ftn.osa.projekat_osa.model.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("select f from Account a join a.accountFolders f where a.id = :id and f.name = 'Inbox'")
     Optional<Folder> getAccountIndexFolder(@Param("id") Long id);
+
+    @Query("select m from Message m where m.account.id = :accountId")
+    Set<Message> getAccountMessages(@Param("accountId") Long accountId);
 }

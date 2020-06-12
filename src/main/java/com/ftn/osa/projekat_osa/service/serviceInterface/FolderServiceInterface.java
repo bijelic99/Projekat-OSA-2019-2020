@@ -22,5 +22,5 @@ public interface FolderServiceInterface {
 
     Set<Folder> getInnerFolders(Long id);
 
-    Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException;
+    Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException;
 }

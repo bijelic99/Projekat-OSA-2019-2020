@@ -60,37 +60,18 @@ public class FolderService implements FolderServiceInterface {
 
 
     @Override
-    public Map<String, Object> syncFolder(Long id, Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+    public Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+        Folder folder = folderRepository.getOne(id);
 
-        String strLatestMessageTimestamp = (String) data.get("latestMessageTimestamp");
-        LocalDateTime latestMessageTimestamp = strLatestMessageTimestamp != null ? LocalDateTime.parse(strLatestMessageTimestamp, DateTimeFormatter.ISO_DATE_TIME) : null;
-
-        List<Object> objectList = (List<Object>) data.get("folder_list");
-        List<Long> folderList = objectList.stream().map(o -> (Long) o).collect(Collectors.toList());
-
-        if(folderList == null) throw new NullPointerException("Folder list cannot be null");
-
-        Folder rootFolder = FolderHelper.getRootFolder(folderRepository.getOne(id));
+        Folder rootFolder = FolderHelper.getRootFolder(folder);
         Optional<Account> optionalAccount = accountRepository.getAccountFromAccountFolder(rootFolder.getId());
         if(optionalAccount.isPresent()){
             Account account = optionalAccount.get();
             mailServiceInterface.getNewMessages(account.getId());
 
-            Folder f = folderRepository.getOne(id);
+            folder = folderRepository.getOne(id);
 
-            List<Message> messages = f.getMessages().stream()
-                    .filter(message -> latestMessageTimestamp == null || message.getDateTime().isAfter(latestMessageTimestamp))
-                    .collect(Collectors.toList());
-
-            List<Folder> folders = f.getFolders().stream()
-                    .filter(folder -> !folderList.contains(folder.getId()))
-                    .collect(Collectors.toList());
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("messages", messages);
-            map.put("folders", folders);
-
-            return map;
+            return folder;
         }
         else throw new ResourceNotFoundException("Account not found");
 

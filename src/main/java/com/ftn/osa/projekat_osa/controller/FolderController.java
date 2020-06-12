@@ -101,25 +101,13 @@ public class FolderController {
                 HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}/sync", consumes = "application/json")
-    public ResponseEntity<FolderSyncWrapper> syncFolder(@PathVariable("id") Long id, @RequestBody Map<String, Object> data) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+    @PutMapping(value = "/{id}/sync")
+    public ResponseEntity<FolderDTO> syncFolder(@PathVariable("id") Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
 
 
-        Map<String, Object> map = folderService.syncFolder(id, data);
+        Folder folder = folderService.syncFolder(id);
 
-
-        List<Message> messages = (List<Message>) map.get("messages");
-        List<Folder> folders = (List<Folder>) map.get("folders");
-        FolderSyncWrapper returnData = new FolderSyncWrapper(
-                messages.stream()
-                        .map(message -> new MessageDTO(message))
-                        .collect(Collectors.toList()),
-                folders.stream()
-                        .map(folder -> new FolderDTO(folder))
-                        .collect(Collectors.toList()));
-
-
-        return new ResponseEntity<>(returnData, HttpStatus.OK);
+        return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
     }
 
 
