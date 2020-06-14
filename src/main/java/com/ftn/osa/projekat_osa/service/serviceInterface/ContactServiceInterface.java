@@ -17,4 +17,6 @@ public interface ContactServiceInterface {
 
     public Set<Contact> getUsersContacts(Long userId);
 
+    public Contact addUserContact(Long userId, Contact contact);
+
 }

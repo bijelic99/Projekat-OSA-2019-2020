@@ -63,4 +63,10 @@ public class UserController {
         Set<Contact> contacts = contactService.getUsersContacts(id);
         return new ResponseEntity<>(contacts.stream().map(ContactDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
     }
+
+    @PostMapping(value = "/{id}/contacts", consumes = "application/json")
+    public ResponseEntity<ContactDTO> addUserContact(@PathVariable(value = "id") Long id, @RequestBody ContactDTO contact){
+        Contact contact1 = contactService.addUserContact(id, contact.getJpaEntity());
+        return new ResponseEntity<>(new ContactDTO(contact1), HttpStatus.OK);
+    }
 }
