@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,4 +36,8 @@ public class ContactService implements ContactServiceInterface {
         contactRepository.deleteById(contactId);
     }
 
+    @Override
+    public Set<Contact> getUsersContacts(Long userId) {
+        return contactRepository.getUsersContacts(userId);
+    }
 }

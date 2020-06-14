@@ -1,11 +1,14 @@
 package com.ftn.osa.projekat_osa.controller;
 
+import com.ftn.osa.projekat_osa.android_dto.ContactDTO;
 import com.ftn.osa.projekat_osa.android_dto.UserDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongPasswordException;
 import com.ftn.osa.projekat_osa.model.Contact;
 import com.ftn.osa.projekat_osa.model.User;
+import com.ftn.osa.projekat_osa.service.ContactService;
 import com.ftn.osa.projekat_osa.service.UserService;
+import com.ftn.osa.projekat_osa.service.serviceInterface.ContactServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "api/users")
@@ -21,6 +25,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ContactServiceInterface contactService;
 
     @PutMapping(value = "/{id}/changePassword")
     public ResponseEntity<Object> changePassword(@PathVariable(value = "id") Long id, @RequestBody Map<String, String> data) {
@@ -52,7 +59,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}/contacts")
-    public ResponseEntity<Set<Contact>> getUserContacts(@PathVariable(value = "id") Long id){
-        
+    public ResponseEntity<Set<ContactDTO>> getUserContacts(@PathVariable(value = "id") Long id){
+        Set<Contact> contacts = contactService.getUsersContacts(id);
+        return new ResponseEntity<>(contacts.stream().map(ContactDTO::new).collect(Collectors.toSet()), HttpStatus.OK);
     }
 }
