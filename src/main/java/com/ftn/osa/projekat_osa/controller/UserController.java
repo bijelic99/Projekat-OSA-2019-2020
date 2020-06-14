@@ -3,6 +3,7 @@ package com.ftn.osa.projekat_osa.controller;
 import com.ftn.osa.projekat_osa.android_dto.UserDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongPasswordException;
+import com.ftn.osa.projekat_osa.model.Contact;
 import com.ftn.osa.projekat_osa.model.User;
 import com.ftn.osa.projekat_osa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "api/users")
@@ -47,5 +49,10 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+
+    @GetMapping("/{id}/contacts")
+    public ResponseEntity<Set<Contact>> getUserContacts(@PathVariable(value = "id") Long id){
+        
     }
 }
