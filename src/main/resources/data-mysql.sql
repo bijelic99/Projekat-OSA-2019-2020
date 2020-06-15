@@ -1,6 +1,7 @@
 --U zavisnosti od potrebe za odredjenim podacima kako bi testirali aplikaciju dodavati statenente.
 --Pokrece se kada se pokrene aplikacija.
 
+--SET GLOBAL max_allowed_packet=1073741824;
 
 INSERT INTO TAGS VALUES(1, 'Urgent');
 INSERT INTO TAGS VALUES(2,'Important');
