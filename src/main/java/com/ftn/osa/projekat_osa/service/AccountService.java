@@ -47,20 +47,25 @@ public class AccountService implements AccountServiceInterface {
     @Override
     public Account add(Account account) throws WrongProtocolException, MessagingException {
         account = accountRepository.save(account);
-        Folder indexFolder = new Folder();
-        indexFolder.setName("Inbox");
-        indexFolder = folderServiceInterface.save(indexFolder);
+        Folder inboxFolder = new Folder();
+        inboxFolder.setName("Inbox");
+        inboxFolder = folderServiceInterface.save(inboxFolder);
 
         Set<Message> messages = mailServiceInterface.getAllMessages(account.getId());
-        indexFolder.getMessages().addAll(messages);
-        indexFolder = folderServiceInterface.save(indexFolder);
+        inboxFolder.getMessages().addAll(messages);
+        inboxFolder = folderServiceInterface.save(inboxFolder);
 
-        account.getAccountFolders().add(indexFolder);
+        account.getAccountFolders().add(inboxFolder);
 
         Folder sentFolder = new Folder();
         sentFolder.setName("Sent");
         sentFolder = folderServiceInterface.save(sentFolder);
         account.getAccountFolders().add(sentFolder);
+
+        Folder draftsFolder = new Folder();
+        draftsFolder.setName("Drafts");
+        draftsFolder = folderServiceInterface.save(draftsFolder);
+        account.getAccountFolders().add(draftsFolder);
 
 
         return accountRepository.save(account);
