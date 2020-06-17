@@ -12,6 +12,7 @@ import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Tag;
 import com.ftn.osa.projekat_osa.service.MailService;
 import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
+import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,9 @@ public class MessageController {
 
 	@Autowired
 	private FolderServiceInterface folderService;
+
+	@Autowired
+	private MailServiceInterface mailServiceInterface;
 	
 	@GetMapping
 	public ResponseEntity<List<MessageDTO>> getMessages() {
@@ -89,5 +93,11 @@ public class MessageController {
 			}
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/send", consumes = "application/json")
+	public ResponseEntity<MessageDTO> sendMessage(@RequestBody MessageDTO messageDTO) throws ResourceNotFoundException, MessagingException {
+		Message message = mailServiceInterface.sendMessage(messageDTO.getJpaEntity());
+		return ResponseEntity.ok(new MessageDTO(message));
 	}
 }

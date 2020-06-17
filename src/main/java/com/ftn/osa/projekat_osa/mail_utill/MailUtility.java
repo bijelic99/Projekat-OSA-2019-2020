@@ -86,10 +86,11 @@ public class MailUtility{
             MimeBodyPart attachmentBodyPart = new MimeBodyPart();
             try {
                 attachmentBodyPart.setFileName(attachment.getName());
+
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-            ByteArrayDataSource dataSource = new ByteArrayDataSource(Base64.getDecoder().decode(attachment.getData()), attachment.getName());
+            ByteArrayDataSource dataSource = new ByteArrayDataSource(Base64.getDecoder().decode(attachment.getData()), attachment.getMime_type());
             try {
                 attachmentBodyPart.setDataHandler(new DataHandler(dataSource));
             } catch (MessagingException e) {

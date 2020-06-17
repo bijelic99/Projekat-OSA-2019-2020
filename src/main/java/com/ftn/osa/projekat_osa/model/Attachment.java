@@ -2,6 +2,7 @@ package com.ftn.osa.projekat_osa.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -9,6 +10,7 @@ import javax.persistence.Table;
 public class Attachment extends JpaEntity {
 
     @Column(nullable = false)
+    @Lob
     private String data;
     @Column(nullable = false)
     private String mimeType;

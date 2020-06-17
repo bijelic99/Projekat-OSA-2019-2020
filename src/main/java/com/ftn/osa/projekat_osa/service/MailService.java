@@ -44,8 +44,15 @@ public class MailService implements MailServiceInterface {
             MailUtility mailUtility = new MailUtility(account);
             mailUtility.sendMessage(message);
 
+            message = messageRepository.save(message);
+            Optional<Folder> optionalFolder = accountRepository.getAccountSentFolder(account.getId());
+            if (optionalFolder.isPresent()){
+                Folder sentFolder = optionalFolder.get();
+                sentFolder.getMessages().add(message);
+                folderRepository.save(sentFolder);
+            }
 
-            return messageRepository.save(message);
+            return message;
         }
         else throw new ResourceNotFoundException("Account not found");
 

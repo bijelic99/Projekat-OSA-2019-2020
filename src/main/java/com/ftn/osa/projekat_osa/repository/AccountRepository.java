@@ -23,4 +23,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("select m from Message m where m.account.id = :accountId")
     Set<Message> getAccountMessages(@Param("accountId") Long accountId);
+
+    @Query("Select f from Account a join a.accountFolders f where a.id = :id and f.name = 'Sent'")
+    Optional<Folder> getAccountSentFolder(@Param("id") Long id);
 }
