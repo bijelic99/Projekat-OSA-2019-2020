@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,16 @@ public class TagService implements TagServiceInterface {
     @Override
     public void remove(Long tagId) {
         tagRepository.deleteById(tagId);
+    }
+
+    @Override
+    public Set<Tag> getUsersTags(Long userId) {
+        return null;
+    }
+
+    @Override
+    public Tag addUserTag(Long userId, Tag tag) {
+        return null;
     }
 
 }
