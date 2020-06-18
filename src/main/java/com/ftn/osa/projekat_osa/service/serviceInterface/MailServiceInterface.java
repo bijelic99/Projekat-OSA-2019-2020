@@ -1,5 +1,7 @@
 package com.ftn.osa.projekat_osa.service.serviceInterface;
 
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
@@ -22,5 +24,5 @@ public interface MailServiceInterface {
 
     Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException;
 
-    Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException, ResourceNotFoundException;
+    Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException, ResourceNotFoundException, InvalidConditionException, InvalidOperationException;
 }

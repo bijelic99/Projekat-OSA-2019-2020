@@ -7,6 +7,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Message;
@@ -102,7 +104,7 @@ public class FolderController {
     }
 
     @PutMapping(value = "/{id}/sync")
-    public ResponseEntity<FolderDTO> syncFolder(@PathVariable("id") Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+    public ResponseEntity<FolderDTO> syncFolder(@PathVariable("id") Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException, InvalidConditionException, InvalidOperationException {
 
 
         Folder folder = folderService.syncFolder(id);

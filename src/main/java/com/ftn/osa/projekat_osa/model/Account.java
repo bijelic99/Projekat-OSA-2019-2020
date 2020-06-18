@@ -140,4 +140,6 @@ public class Account extends JpaEntity {
     public void setAccountFolders(Set<Folder> accountFolders) {
         this.accountFolders = accountFolders;
     }
+
+
 }

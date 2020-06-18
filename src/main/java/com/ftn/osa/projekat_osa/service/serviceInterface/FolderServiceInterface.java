@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
@@ -22,5 +24,5 @@ public interface FolderServiceInterface {
 
     Set<Folder> getInnerFolders(Long id);
 
-    Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException;
+    Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException, InvalidConditionException, InvalidOperationException;
 }

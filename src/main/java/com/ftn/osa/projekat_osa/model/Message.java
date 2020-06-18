@@ -142,5 +142,4 @@ public class Message extends JpaEntity {
     public boolean equals(Object obj) {
         return this.getId().equals(((Message)obj).getId());
     }
-
 }

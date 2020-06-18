@@ -1,21 +1,19 @@
 package com.ftn.osa.projekat_osa.service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
 import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
-import com.ftn.osa.projekat_osa.model.Folder;
-import com.ftn.osa.projekat_osa.model.Message;
+import com.ftn.osa.projekat_osa.model.*;
+import com.ftn.osa.projekat_osa.repository.AttachmentRepository;
 import com.ftn.osa.projekat_osa.repository.FolderRepository;
 import com.ftn.osa.projekat_osa.repository.MessageRepository;
 import com.ftn.osa.projekat_osa.utillity.RuleHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ftn.osa.projekat_osa.model.Rule;
 import com.ftn.osa.projekat_osa.repository.RuleRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.RuleServiceInterface;
 
@@ -30,6 +28,9 @@ public class RuleService implements RuleServiceInterface {
 
     @Autowired
     MessageRepository messageRepository;
+
+    @Autowired
+    AttachmentRepository attachmentRepository;
 
     @Override
     public Rule getOne(Long ruleID) {
@@ -51,57 +52,98 @@ public class RuleService implements RuleServiceInterface {
         ruleRepository.deleteById(ruleID);
     }
 
-    //TODO Proveriti
     @Override
-    public Set<Message> executeRuleSet(Long accountId, Set<Message> messages) {
+    public List<Message> executeRuleSetOnNewMessages(Long accountId, List<Message> messages) throws InvalidConditionException, InvalidOperationException {
         Set<Rule> rules = ruleRepository.getAccountRules(accountId);
-        return messages.stream()
-                .filter(message -> !rules.stream()
-                                .map(rule -> {
-                                    try {
-                                        return RuleHelper.executeRule(rule, message, new RuleHelper.RuleActionInterface() {
-                                            @Override
-                                            public void moveAction(Message message, Folder destinationFolder) {
-                                                Optional<Folder> optionalFolder = folderRepository.getFolderThatContainsMessage(message.getId());
-                                                if(optionalFolder.isPresent()){
-                                                    Folder currentFolder = optionalFolder.get();
-                                                    currentFolder.getMessages().remove(message);
-                                                    folderRepository.save(currentFolder);
+        List<Message> ruleReqNotMetMessageList = new ArrayList<>();
+        for(Message message : messages){
+            Boolean messagePassesRules = false;
+            for(Rule rule : rules){
+                messagePassesRules = messagePassesRules || RuleHelper.executeRule(rule, message, new RuleHelper.RuleActionInterface() {
+                    @Override
+                    public void moveAction(Message message, Folder destinationFolder) {
+                        destinationFolder.getMessages().add(message);
+                        folderRepository.save(destinationFolder);
+                    }
 
-                                                    destinationFolder.getMessages().add(message);
-                                                    folderRepository.save(destinationFolder);
-                                                }
-                                            }
+                    @Override
+                    public void copyAction(Message message, Folder destinationFolder) {
+                        destinationFolder.getMessages().add(message);
+                        folderRepository.save(destinationFolder);
+                    }
 
-                                            @Override
-                                            public void copyAction(Message message, Folder destinationFolder) {
-                                                message = new Message(null, message.getFrom(), message.getTo(),
-                                                        message.getCc(), message.getBcc(), message.getDateTime(),
-                                                        message.getSubject(), message.getContent(), message.isUnread(),
-                                                        message.getTags(), message.getAttachments(), message.getAccount());
+                    @Override
+                    public void deleteAction(Message message) {
+                        messageRepository.deleteById(message.getId());
+                    }
+                });
 
-                                                message = messageRepository.save(message);
+                if(rule.getOperation().equals(Operation.DELETE) || rule.getOperation().equals(Operation.MOVE)) break;
+            }
+            if(!messagePassesRules) ruleReqNotMetMessageList.add(message);
+        }
 
-                                                destinationFolder.getMessages().add(message);
-                                                    folderRepository.save(destinationFolder);
+        return ruleReqNotMetMessageList;
+    }
 
-                                            }
+    @Override
+    public Folder executeRuleSet(Long accountId, Long folderId) throws InvalidConditionException, InvalidOperationException {
+        Folder folder = folderRepository.getOne(folderId);
+        Set<Rule> rules = ruleRepository.getAccountRules(accountId);
+        List<Message> messageList = new ArrayList<>(folder.getMessages());
+        for(int i = 0; i<messageList.size(); i++){
+            for(Rule rule : rules){
+                Integer index = i;
+                RuleHelper.executeRule(rule, messageList.get(index), new RuleHelper.RuleActionInterface() {
+                    @Override
+                    public void moveAction(Message message, Folder destinationFolder) {
+                        destinationFolder.getMessages().add(message);
+                        messageList.remove(index);
+                        folderRepository.save(destinationFolder);
+                    }
 
-                                            @Override
-                                            public void deleteAction(Message message) {
-                                                messageRepository.deleteById(message.getId());
-                                            }
-                                        });
-                                    } catch (InvalidConditionException e) {
-                                        e.printStackTrace();
-                                    } catch (InvalidOperationException e) {
-                                        e.printStackTrace();
-                                    }
-                                    return null;
-                                })
-                                .filter(aBoolean -> aBoolean != null)
-                                .reduce(false, (aBoolean, aBoolean2) -> aBoolean || aBoolean2 )
-        ).collect(Collectors.toSet());
+                    @Override
+                    public void copyAction(Message message, Folder destinationFolder) {
+                        Message copyMessage = new Message();
+                        copyMessage.setDateTime(message.getDateTime());
+                        copyMessage.setFrom(message.getFrom());
+                        copyMessage.setTo(message.getTo());
+                        copyMessage.setCc(message.getCc());
+                        copyMessage.setBcc(message.getBcc());
+                        copyMessage.setAccount(message.getAccount());
+                        copyMessage.setContent(message.getContent());
+                        copyMessage.setSubject(message.getSubject());
+                        copyMessage.setUnread(message.isUnread());
+                        copyMessage.setTags(message.getTags());
+                        List<Attachment> copyAttachments = message.getAttachments().stream().map(attachment -> {
+                            Attachment newAttachment = new Attachment();
+                            newAttachment.setName(attachment.getName());
+                            newAttachment.setMime_type(attachment.getMime_type());
+                            newAttachment.setData(attachment.getData());
+                            return newAttachment;
+                        }).collect(Collectors.toList());
+                        copyAttachments = attachmentRepository.saveAll(copyAttachments);
+                        copyMessage.setAttachments(new HashSet<>(copyAttachments));
+
+                        destinationFolder.getMessages().add(copyMessage);
+                        folderRepository.save(destinationFolder);
+                    }
+
+                    @Override
+                    public void deleteAction(Message message) {
+                        messageList.remove(index);
+                        messageRepository.deleteById(message.getId());
+                    }
+                });
+                if(rule.getOperation().equals(Operation.DELETE) || rule.getOperation().equals(Operation.MOVE)) break;
+            }
+
+        }
+
+        folder.setMessages(new HashSet<>(messageList));
+        folder = folderRepository.save(folder);
+
+        return folder;
     }
 
 
