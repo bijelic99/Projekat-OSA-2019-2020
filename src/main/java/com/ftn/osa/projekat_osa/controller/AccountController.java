@@ -128,4 +128,10 @@ public class AccountController {
             return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
 
     }
+
+    @PostMapping(value = "/{id}/drafts", consumes = "application/json")
+    public ResponseEntity<MessageDTO> addToDrafts(@PathVariable("id") Long accountId, @RequestBody MessageDTO messageDTO) throws ResourceNotFoundException {
+        Message message = accountService.addMessageToDraftsFolder(accountId, messageDTO.getJpaEntity());
+        return ResponseEntity.ok(new MessageDTO(message));
+    }
 }

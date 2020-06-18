@@ -43,7 +43,7 @@ public class MailService implements MailServiceInterface {
             Account account = optionalAccount.get();
             MailUtility mailUtility = new MailUtility(account);
             mailUtility.sendMessage(message);
-
+            message.setDateTime(LocalDateTime.now());
             message = messageRepository.save(message);
             Optional<Folder> optionalFolder = accountRepository.getAccountSentFolder(account.getId());
             if (optionalFolder.isPresent()){
