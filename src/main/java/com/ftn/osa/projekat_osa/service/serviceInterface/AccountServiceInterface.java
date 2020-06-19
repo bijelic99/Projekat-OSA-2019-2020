@@ -1,5 +1,7 @@
 package com.ftn.osa.projekat_osa.service.serviceInterface;
 
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Account;
@@ -17,7 +19,7 @@ public interface AccountServiceInterface {
 
     public Account save(Account account) throws WrongProtocolException, MessagingException;
 
-    public Account add(Account account) throws WrongProtocolException, MessagingException;
+    public Account add(Account account) throws WrongProtocolException, MessagingException, InvalidConditionException, InvalidOperationException;
 
     public void remove(Long accountId);
 

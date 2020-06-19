@@ -103,7 +103,7 @@ public class FolderController {
                 HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{id}/sync")
+    @GetMapping(value = "/{id}/sync")
     public ResponseEntity<FolderDTO> syncFolder(@PathVariable("id") Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException, InvalidConditionException, InvalidOperationException {
 
 
