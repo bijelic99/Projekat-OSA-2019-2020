@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
 import com.ftn.osa.projekat_osa.android_dto.FolderMetadataDTO;
 import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
@@ -59,7 +61,7 @@ public class AccountController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO) throws WrongProtocolException, MessagingException {
+    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO accountDTO) throws WrongProtocolException, MessagingException, InvalidConditionException, InvalidOperationException {
         Account account = accountDTO.getJpaEntity();
         account = accountService.add(account);
 
@@ -109,7 +111,7 @@ public class AccountController {
     }
 
     @GetMapping(value = "/{id}/messages")
-    public ResponseEntity<Set<MessageDTO>> getMessages(@PathVariable("id") Long accountId) throws WrongProtocolException, MessagingException {
+    public ResponseEntity<Set<MessageDTO>> getMessages(@PathVariable("id") Long accountId) throws WrongProtocolException, MessagingException, InvalidConditionException, InvalidOperationException {
         return new ResponseEntity<>(mailService.getAllMessages(accountId).stream()
                 .map(message -> new MessageDTO(message))
                 .collect(Collectors.toSet()), HttpStatus.OK);

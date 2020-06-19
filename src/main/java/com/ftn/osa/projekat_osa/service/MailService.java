@@ -144,7 +144,7 @@ public class MailService implements MailServiceInterface {
      * @throws MessagingException
      */
     @Override
-    public Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException {
+    public Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException, InvalidConditionException, InvalidOperationException {
         Account account = accountRepository.getOne(accountId);
         MailUtility mailUtility = new MailUtility(account);
         Set<Message> messages = mailUtility.getMessages();
@@ -158,6 +158,13 @@ public class MailService implements MailServiceInterface {
                 )
                 .collect(Collectors.toSet());
         messageRepository.saveAll(newMessages);
+        Optional<Folder> optionalFolder = accountRepository.getAccountIndexFolder(accountId);
+        if(optionalFolder.isPresent()){
+            Folder indexFolder = optionalFolder.get();
+            List<Message> forIndexFolder = ruleService.executeRuleSetOnNewMessages(accountId, new ArrayList<>(newMessages));
+            indexFolder.getMessages().addAll(forIndexFolder);
+            folderRepository.save(indexFolder);
+        }
 
         currentMessages = accountRepository.getAccountReceivedMessages(accountId);
 

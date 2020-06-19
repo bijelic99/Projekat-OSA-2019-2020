@@ -22,7 +22,7 @@ public interface MailServiceInterface {
     @Deprecated
     Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException;
 
-    Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException;
+    Set<Message> getAllMessages(Long accountId) throws WrongProtocolException, MessagingException, InvalidConditionException, InvalidOperationException;
 
     Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException, ResourceNotFoundException, InvalidConditionException, InvalidOperationException;
 }
