@@ -7,11 +7,9 @@ import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Message;
+import com.ftn.osa.projekat_osa.model.Rule;
 import com.ftn.osa.projekat_osa.repository.AccountRepository;
-import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface;
-import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
-import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
-import com.ftn.osa.projekat_osa.service.serviceInterface.MessageServiceInterface;
+import com.ftn.osa.projekat_osa.service.serviceInterface.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +32,9 @@ public class AccountService implements AccountServiceInterface {
 
     @Autowired
     MessageServiceInterface messageServiceInterface;
+
+    @Autowired
+    RuleServiceInterface ruleService;
 
     @Override
     public List<Account> getAll() {
@@ -107,5 +108,26 @@ public class AccountService implements AccountServiceInterface {
         else throw new ResourceNotFoundException("Drafts folder couldn't be found, are you sure your accountId is correct?");
     }
 
+    @Override
+    public Rule addAccountRule(Long accountId, Rule rule) throws ResourceNotFoundException {
+        Optional<Account> optional = accountRepository.findById(accountId);
+        if(optional.isPresent()){
+            Account account = optional.get();
+            rule = ruleService.save(rule);
+            account.getAccountRules().add(rule);
+            accountRepository.save(account);
+            return rule;
+        }
+        else throw new ResourceNotFoundException("Account not found");
+    }
 
+    @Override
+    public Set<Rule> getAccountRules(Long accountId) throws ResourceNotFoundException {
+        Optional<Account> optional = accountRepository.findById(accountId);
+        if(optional.isPresent()){
+            Account account = optional.get();
+            return account.getAccountRules();
+        }
+        else throw new ResourceNotFoundException("Account not found");
+    }
 }

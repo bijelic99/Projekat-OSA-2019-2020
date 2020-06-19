@@ -5,15 +5,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
-import com.ftn.osa.projekat_osa.android_dto.FolderMetadataDTO;
-import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
+import com.ftn.osa.projekat_osa.android_dto.*;
 import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
 import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Message;
+import com.ftn.osa.projekat_osa.model.Rule;
 import com.ftn.osa.projekat_osa.service.MailService;
 import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ftn.osa.projekat_osa.android_dto.AccountDTO;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface;
 
@@ -135,5 +133,17 @@ public class AccountController {
     public ResponseEntity<MessageDTO> addToDrafts(@PathVariable("id") Long accountId, @RequestBody MessageDTO messageDTO) throws ResourceNotFoundException {
         Message message = accountService.addMessageToDraftsFolder(accountId, messageDTO.getJpaEntity());
         return ResponseEntity.ok(new MessageDTO(message));
+    }
+
+    @PostMapping(value = "/{id}/rules", consumes = "application/json")
+    public ResponseEntity<RuleDTO> addAccountRule(@PathVariable("id") Long accountId, @RequestBody RuleDTO ruleDTO) throws ResourceNotFoundException {
+        Rule rule = accountService.addAccountRule(accountId, ruleDTO.getJpaEntity());
+        return ResponseEntity.ok(new RuleDTO(rule));
+    }
+
+    @GetMapping(value = "/{id}/rules")
+    public ResponseEntity<Set<RuleDTO>> addAccountRule(@PathVariable("id") Long accountId) throws ResourceNotFoundException {
+        Set<Rule> rules = accountService.getAccountRules(accountId);
+        return ResponseEntity.ok(rules.stream().map(rule -> new RuleDTO(rule)).collect(Collectors.toSet()));
     }
 }
