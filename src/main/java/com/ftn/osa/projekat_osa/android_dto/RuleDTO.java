@@ -75,6 +75,6 @@ public class RuleDTO extends DtoObject<Rule> {
 
     @Override
     public Rule getJpaEntity() {
-        return new Rule(this.getId(), Condition.valueOf(this.getCondition()), this.getValue(), Operation.valueOf(this.getOperation()), this.getDestination().getJpaEntity());
+        return new Rule(this.getId(), Condition.valueOf(this.getCondition()), this.getValue(), Operation.valueOf(this.getOperation()), this.getDestination() != null ? this.getDestination().getJpaEntity() : null);
     }
 }
