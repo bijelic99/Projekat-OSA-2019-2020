@@ -94,12 +94,15 @@ public class RuleService implements RuleServiceInterface {
         for(int i = 0; i<messageList.size(); i++){
             for(Rule rule : rules){
                 Integer index = i;
+                Folder finalFolder = folder;
                 RuleHelper.executeRule(rule, messageList.get(index), new RuleHelper.RuleActionInterface() {
                     @Override
                     public void moveAction(Message message, Folder destinationFolder) {
-                        destinationFolder.getMessages().add(message);
-                        messageList.remove(index);
-                        folderRepository.save(destinationFolder);
+                        if(destinationFolder.getId() != finalFolder.getId()) {
+                            destinationFolder.getMessages().add(message);
+                            messageList.remove(index);
+                            folderRepository.save(destinationFolder);
+                        }
                     }
 
                     @Override
