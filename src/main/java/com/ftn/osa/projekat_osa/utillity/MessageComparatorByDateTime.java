@@ -13,7 +13,10 @@ public class MessageComparatorByDateTime implements Comparator<Message> {
     public int compare(Message o1, Message o2) {
         LocalDateTime ldt1 = o1.getDateTime();
         LocalDateTime ldt2 = o2.getDateTime();
-        return ldt1.isAfter(ldt2) ? -1 : ldt2.isAfter(ldt1) ? 1 : 0;
+        if(ldt1 == null && ldt2 == null) return 0;
+        else if(ldt1 != null && ldt2 == null) return 1;
+        else if(ldt1 == null && ldt2 != null) return -1;
+        else return ldt1.isAfter(ldt2) ? -1 : ldt2.isAfter(ldt1) ? 1 : 0;
     }
 
     public static int compareObjects(Message o1, Message o2){

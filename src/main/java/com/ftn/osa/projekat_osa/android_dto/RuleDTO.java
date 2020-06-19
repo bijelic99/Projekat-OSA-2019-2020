@@ -10,20 +10,18 @@ public class RuleDTO extends DtoObject<Rule> {
     private String condition;
     private String operation;
     private FolderMetadataDTO destination;
-    private FolderMetadataDTO target;
     private String value;
 
     public RuleDTO() {
 
     }
 
-    public RuleDTO(Long id, String condition, String operation, FolderMetadataDTO destination, FolderMetadataDTO target, String value) {
+    public RuleDTO(Long id, String condition, String operation, FolderMetadataDTO destination, String value) {
         this.id = id;
         this.condition = condition;
         this.operation = operation;
         this.destination = destination;
         this.value = value;
-        this.target = target;
     }
 
     public RuleDTO(Rule entity) {
@@ -31,7 +29,6 @@ public class RuleDTO extends DtoObject<Rule> {
         this.condition = entity.getCondition().name();
         this.operation = entity.getOperation().name();
         this.destination = entity.getDestinationFolder() != null ? new FolderMetadataDTO(entity.getDestinationFolder()) : null;
-        this.target = entity.getTargetFolder() != null ? new FolderMetadataDTO(entity.getTargetFolder()) : null;
         this.value = entity.getValue();
     }
 
@@ -76,16 +73,8 @@ public class RuleDTO extends DtoObject<Rule> {
         this.value = value;
     }
 
-    public FolderMetadataDTO getTarget() {
-        return target;
-    }
-
-    public void setTarget(FolderMetadataDTO target) {
-        this.target = target;
-    }
-
     @Override
     public Rule getJpaEntity() {
-        return new Rule(this.getId(), Condition.valueOf(this.getCondition()), this.getValue(), Operation.valueOf(this.getOperation()), this.getDestination().getJpaEntity(), this.getTarget().getJpaEntity());
+        return new Rule(this.getId(), Condition.valueOf(this.getCondition()), this.getValue(), Operation.valueOf(this.getOperation()), this.getDestination().getJpaEntity());
     }
 }

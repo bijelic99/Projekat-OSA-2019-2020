@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Account;
@@ -25,13 +27,13 @@ import javax.mail.MessagingException;
 public class FolderService implements FolderServiceInterface {
 
     @Autowired
-    FolderRepository folderRepository;
+    private FolderRepository folderRepository;
 
     @Autowired
-    MailServiceInterface mailServiceInterface;
+    private MailServiceInterface mailServiceInterface;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Override
     public Folder getOne(Long folderID) {
@@ -60,7 +62,7 @@ public class FolderService implements FolderServiceInterface {
 
 
     @Override
-    public Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException {
+    public Folder syncFolder(Long id) throws ResourceNotFoundException, MessagingException, WrongProtocolException, InvalidConditionException, InvalidOperationException {
         Folder folder = folderRepository.getOne(id);
 
         Folder rootFolder = FolderHelper.getRootFolder(folder);

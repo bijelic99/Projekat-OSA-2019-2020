@@ -22,13 +22,17 @@ INSERT INTO USERS_USER_ACCOUNTS(USER_ID, USER_ACCOUNTS_ID) VALUES(2, 4);
 
 INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(1, 'Inbox', null);
 INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(2, 'Sent', null);
+INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(5, 'Drafts', null);
 INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(3, 'Inbox', null);
 INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(4, 'Sent', null);
+INSERT INTO FOLDERS(ID, NAME, PARENT_FOLDER_ID) VALUES(6, 'Drafts', null);
 
 INSERT INTO ACCOUNTS_ACCOUNT_FOLDERS VALUES(3, 1);
 INSERT INTO ACCOUNTS_ACCOUNT_FOLDERS VALUES(3, 2);
 INSERT INTO ACCOUNTS_ACCOUNT_FOLDERS VALUES(4, 3);
 INSERT INTO ACCOUNTS_ACCOUNT_FOLDERS VALUES(4, 4);
+INSERT INTO ACCOUNTS_ACCOUNT_FOLDERS VALUES(3, 5);
+INSERT INTO ACCOUNTS_ACCOUNT_FOLDERS VALUES(4, 6);
 
 INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUES(1, 'displayName', 'email@gmail.com', 'first name', 'last name', 'note');
 INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUES(2, 'displayName1', 'email1@gmail.com', 'first name1', 'last name1', 'note1');
@@ -54,7 +58,7 @@ INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type
 --INSERT INTO messages_tags(message_id, tags_id) VALUES(1,3);
 --INSERT INTO messages_tags(message_id, tags_id) VALUES(2,4);
 
-INSERT INTO rules(id, _condition, operation, value, destination_folder_id, target_folder_id) VALUES(1, 1, 2, 'value1', 1, 2);
+INSERT INTO rules(id, _condition, operation, value, destination_folder_id) VALUES(1, 1, 2, 'value1', 1);
 
 INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(1, 1);
 INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(2, 2);

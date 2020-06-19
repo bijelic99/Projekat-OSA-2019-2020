@@ -101,12 +101,6 @@ public class AccountController {
         }
     }
 
-    @GetMapping(value = "/{id}/folder-tree")
-    public ResponseEntity<Set<Object>> getFolderTree(@PathVariable("id") Long accountId) throws ResourceNotFoundException, MessagingException {
-        Set<Folder> folderSet = mailService.getWholeFolderTree(accountId);
-        Set<FolderDTO> folderDTOSet = folderSet.stream().map(folder -> new FolderDTO(folder)).collect(Collectors.toSet());
-        return new ResponseEntity(folderDTOSet, HttpStatus.OK);
-    }
 
     @GetMapping(value = "/{id}/folders")
     public ResponseEntity<Set<FolderMetadataDTO>> getAccountFolders(@PathVariable("id") Long accountId){
@@ -133,5 +127,11 @@ public class AccountController {
 
             return new ResponseEntity<>(new FolderDTO(folder), HttpStatus.OK);
 
+    }
+
+    @PostMapping(value = "/{id}/drafts", consumes = "application/json")
+    public ResponseEntity<MessageDTO> addToDrafts(@PathVariable("id") Long accountId, @RequestBody MessageDTO messageDTO) throws ResourceNotFoundException {
+        Message message = accountService.addMessageToDraftsFolder(accountId, messageDTO.getJpaEntity());
+        return ResponseEntity.ok(new MessageDTO(message));
     }
 }

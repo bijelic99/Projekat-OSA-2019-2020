@@ -14,4 +14,6 @@ public interface RuleRepository extends JpaRepository<Rule, Long> {
 
     @Query("select accountRules from Account a where a.id = :accountId")
     Set<Rule> getAccountRules(@Param("accountId") Long accountId);
+
+
 }

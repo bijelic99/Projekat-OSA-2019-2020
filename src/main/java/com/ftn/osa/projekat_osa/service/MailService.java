@@ -1,5 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.mail_utill.MailUtility;
@@ -10,6 +12,7 @@ import com.ftn.osa.projekat_osa.repository.AccountRepository;
 import com.ftn.osa.projekat_osa.repository.FolderRepository;
 import com.ftn.osa.projekat_osa.repository.MessageRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
+import com.ftn.osa.projekat_osa.service.serviceInterface.RuleServiceInterface;
 import com.ftn.osa.projekat_osa.utillity.FolderHelper;
 import com.ftn.osa.projekat_osa.utillity.MessageComparatorByDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +22,6 @@ import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class MailService implements MailServiceInterface {
@@ -34,7 +36,7 @@ public class MailService implements MailServiceInterface {
     FolderRepository folderRepository;
 
     @Autowired
-    RuleService ruleService;
+    RuleServiceInterface ruleService;
 
     @Override
     public Message sendMessage(Message message) throws ResourceNotFoundException, MessagingException {
@@ -43,9 +45,16 @@ public class MailService implements MailServiceInterface {
             Account account = optionalAccount.get();
             MailUtility mailUtility = new MailUtility(account);
             mailUtility.sendMessage(message);
+            message.setDateTime(LocalDateTime.now());
+            message = messageRepository.save(message);
+            Optional<Folder> optionalFolder = accountRepository.getAccountSentFolder(account.getId());
+            if (optionalFolder.isPresent()){
+                Folder sentFolder = optionalFolder.get();
+                sentFolder.getMessages().add(message);
+                folderRepository.save(sentFolder);
+            }
 
-
-            return messageRepository.save(message);
+            return message;
         }
         else throw new ResourceNotFoundException("Account not found");
 
@@ -139,7 +148,7 @@ public class MailService implements MailServiceInterface {
         Account account = accountRepository.getOne(accountId);
         MailUtility mailUtility = new MailUtility(account);
         Set<Message> messages = mailUtility.getMessages();
-        Set<Message> currentMessages = accountRepository.getAccountMessages(accountId);
+        Set<Message> currentMessages = accountRepository.getAccountReceivedMessages(accountId);
         Set<Message> finalCurrentMessages = currentMessages;
         Set<Message> newMessages = messages.stream()
                 .filter(message -> !finalCurrentMessages.parallelStream()
@@ -150,7 +159,7 @@ public class MailService implements MailServiceInterface {
                 .collect(Collectors.toSet());
         messageRepository.saveAll(newMessages);
 
-        currentMessages = accountRepository.getAccountMessages(accountId);
+        currentMessages = accountRepository.getAccountReceivedMessages(accountId);
 
         return currentMessages;
     }
@@ -163,14 +172,14 @@ public class MailService implements MailServiceInterface {
      * @throws MessagingException
      */
     @Override
-    public Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException, ResourceNotFoundException {
+    public Set<Message> getNewMessages(Long accountId) throws WrongProtocolException, MessagingException, ResourceNotFoundException, InvalidConditionException, InvalidOperationException {
         Account account = accountRepository.getOne(accountId);
 
         Optional<Folder> optionalFolder = accountRepository.getAccountIndexFolder(accountId);
         if(optionalFolder.isPresent()) {
             Folder indexFolder = optionalFolder.get();
-
-            LocalDateTime latestTimestamp = indexFolder.getMessages().stream()
+            Set<Message> accountReceivedMessages = accountRepository.getAccountReceivedMessages(accountId);
+            LocalDateTime latestTimestamp = accountReceivedMessages.stream()
                     .map(message -> message.getDateTime())
                     .max((o1, o2) -> o1.isAfter(o2) ? 1 : o1.isBefore(o2) ? -1 : 0)
                     .orElse(null);
@@ -178,9 +187,9 @@ public class MailService implements MailServiceInterface {
             MailUtility mailUtility = new MailUtility(account);
             Set<Message> messages = mailUtility.getNewMessages(latestTimestamp);
             messages = new HashSet<>(messageRepository.saveAll(messages));
-            indexFolder.getMessages().addAll(messages);
-
-            ruleService.executeRuleSet(accountId, messages);
+            List<Message> forIndexFolder = ruleService.executeRuleSetOnNewMessages(accountId, new ArrayList<>(messages));
+            indexFolder.getMessages().addAll(forIndexFolder);
+            folderRepository.save(indexFolder);
             Set<Message> messages1 = folderRepository.getOne(indexFolder.getId()).getMessages();
             Set<Message> finalMessages = messages;
             return messages1.stream().filter(message -> finalMessages.contains(message)).collect(Collectors.toSet());

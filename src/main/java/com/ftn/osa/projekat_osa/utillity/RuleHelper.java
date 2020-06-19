@@ -7,6 +7,7 @@ import com.ftn.osa.projekat_osa.model.Message;
 import com.ftn.osa.projekat_osa.model.Rule;
 
 public interface RuleHelper {
+
     static boolean executeRule(Rule rule, Message message, RuleActionInterface ruleActions) throws InvalidConditionException, InvalidOperationException {
         boolean passesCondition = false;
         switch (rule.getCondition()){
@@ -50,8 +51,13 @@ public interface RuleHelper {
         return passesCondition;
     }
 
+
+
+
+
+
     public interface RuleActionInterface{
-        void moveAction(Message message, Folder destinationFolder);
+        void moveAction(Message message,  Folder destinationFolder);
         void copyAction(Message message, Folder destinationFolder);
         void deleteAction(Message message);
     }

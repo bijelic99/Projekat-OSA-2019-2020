@@ -1,8 +1,10 @@
 package com.ftn.osa.projekat_osa.service.serviceInterface;
 
+import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
+import com.ftn.osa.projekat_osa.model.Message;
 
 import javax.mail.MessagingException;
 import java.util.List;
@@ -22,4 +24,6 @@ public interface AccountServiceInterface {
     public Set<Folder> getAccountFolders(Long accountId);
 
     public Folder getIndexFolder(Long accountID);
+
+    public Message addMessageToDraftsFolder(Long accountID, Message message) throws ResourceNotFoundException;
 }

@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.service;
 
+import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
@@ -8,11 +9,11 @@ import com.ftn.osa.projekat_osa.repository.AccountRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface;
 import com.ftn.osa.projekat_osa.service.serviceInterface.FolderServiceInterface;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
+import com.ftn.osa.projekat_osa.service.serviceInterface.MessageServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,6 +29,9 @@ public class AccountService implements AccountServiceInterface {
 
     @Autowired
     FolderServiceInterface folderServiceInterface;
+
+    @Autowired
+    MessageServiceInterface messageServiceInterface;
 
     @Override
     public List<Account> getAll() {
@@ -47,20 +51,25 @@ public class AccountService implements AccountServiceInterface {
     @Override
     public Account add(Account account) throws WrongProtocolException, MessagingException {
         account = accountRepository.save(account);
-        Folder indexFolder = new Folder();
-        indexFolder.setName("Inbox");
-        indexFolder = folderServiceInterface.save(indexFolder);
+        Folder inboxFolder = new Folder();
+        inboxFolder.setName("Inbox");
+        inboxFolder = folderServiceInterface.save(inboxFolder);
 
         Set<Message> messages = mailServiceInterface.getAllMessages(account.getId());
-        indexFolder.getMessages().addAll(messages);
-        indexFolder = folderServiceInterface.save(indexFolder);
+        inboxFolder.getMessages().addAll(messages);
+        inboxFolder = folderServiceInterface.save(inboxFolder);
 
-        account.getAccountFolders().add(indexFolder);
+        account.getAccountFolders().add(inboxFolder);
 
         Folder sentFolder = new Folder();
         sentFolder.setName("Sent");
         sentFolder = folderServiceInterface.save(sentFolder);
         account.getAccountFolders().add(sentFolder);
+
+        Folder draftsFolder = new Folder();
+        draftsFolder.setName("Drafts");
+        draftsFolder = folderServiceInterface.save(draftsFolder);
+        account.getAccountFolders().add(draftsFolder);
 
 
         return accountRepository.save(account);
@@ -82,5 +91,19 @@ public class AccountService implements AccountServiceInterface {
         if (optionalFolder.isPresent()) return optionalFolder.get();
         else return null;
     }
+
+    @Override
+    public Message addMessageToDraftsFolder(Long accountID, Message message) throws ResourceNotFoundException {
+        Optional<Folder> optionalFolder = accountRepository.getAccountDraftsFolder(accountID);
+        if(optionalFolder.isPresent()){
+            Folder draftsFolder = optionalFolder.get();
+            message = messageServiceInterface.save(message);
+            draftsFolder.getMessages().add(message);
+            folderServiceInterface.save(draftsFolder);
+            return message;
+        }
+        else throw new ResourceNotFoundException("Drafts folder couldn't be found, are you sure your accountId is correct?");
+    }
+
 
 }
