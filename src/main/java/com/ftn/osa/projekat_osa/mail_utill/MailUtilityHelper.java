@@ -1,22 +1,18 @@
 package com.ftn.osa.projekat_osa.mail_utill;
 
 import com.ftn.osa.projekat_osa.model.*;
+import com.ftn.osa.projekat_osa.model.Folder;
+import com.ftn.osa.projekat_osa.model.Message;
 
-import javax.activation.DataHandler;
-import javax.mail.BodyPart;
-import javax.mail.Flags;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
+import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.mail.internet.MimeMultipart;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Date;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public interface MailUtilityHelper {
@@ -105,16 +101,25 @@ public interface MailUtilityHelper {
                     jpaMessage.setContent((jpaMessage.getContent() != null ? jpaMessage.getContent() : "") + bodyPart.getContent().toString());
                 }
                 else {
-                    Attachment attachment = new Attachment();
-                    DataHandler dataHandler = bodyPart.getDataHandler();
-                    attachment.setMime_type(dataHandler.getContentType());
-                    InputStream inputStream = message.getInputStream();
-                    byte[] attArray = new byte[inputStream.available()];
-                    inputStream.read(attArray);
-                    String base64Att = Base64.getEncoder().encodeToString(attArray);
-                    attachment.setData(base64Att);
-                    attachment.setName(bodyPart.getFileName());
-                    jpaMessage.getAttachments().add(attachment);
+                    if(!(!Part.ATTACHMENT.equalsIgnoreCase(bodyPart.getDisposition()) &&
+                            (bodyPart.getFileName() == null || bodyPart.getFileName().isEmpty())
+                    )){
+                        InputStream is = bodyPart.getInputStream();
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        byte[] buf = new byte[4096];
+                        int bytesRead;
+                        while ((bytesRead = is.read(buf)) != -1){
+                            outputStream.write(buf, 0, bytesRead);
+                        }
+                        outputStream.close();
+                        String b64Str = Base64.getEncoder().encodeToString(outputStream.toByteArray());
+                        Attachment attachment = new Attachment();
+                        attachment.setMime_type(bodyPart.getContentType().split(";")[0]);
+                        attachment.setName(bodyPart.getFileName());
+                        attachment.setData(b64Str);
+
+                        jpaMessage.getAttachments().add(attachment);
+                    }
                 }
             }
         }
