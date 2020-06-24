@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "api/register")
+@RequestMapping(value = "register")
 public class RegisterController {
 
     @Autowired
@@ -23,6 +23,7 @@ public class RegisterController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
         try {
+            userDTO.setPassword( org.apache.commons.codec.digest.DigestUtils.sha256Hex(userDTO.getPassword()));
             Optional<User> userOptional = userService.registerUser(userDTO.getJpaEntity());
             ResponseEntity<UserDTO> responseEntity;
             if (userOptional.isPresent())

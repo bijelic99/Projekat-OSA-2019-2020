@@ -58,4 +58,9 @@ public class UserService implements UserServiceInterface {
             return Optional.of(userRepository.save(user));
         } else throw new ResourceNotFoundException("User not found");
     }
+
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username);
+    }
 }

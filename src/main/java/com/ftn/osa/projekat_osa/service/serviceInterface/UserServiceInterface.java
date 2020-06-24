@@ -13,4 +13,6 @@ public interface UserServiceInterface {
     public Optional<User> changePassword(Long userId, String currentPassword, String newPassword) throws ResourceNotFoundException, WrongPasswordException;
 
     public Optional<User> updateUser(Long userId, Map<String, String> newValues) throws ResourceNotFoundException;
+
+    public Optional<User> getUserByUsername(String username);
 }
