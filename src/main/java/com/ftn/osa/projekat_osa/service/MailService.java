@@ -6,9 +6,11 @@ import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
 import com.ftn.osa.projekat_osa.mail_utill.MailUtility;
 import com.ftn.osa.projekat_osa.model.Account;
+import com.ftn.osa.projekat_osa.model.Attachment;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Message;
 import com.ftn.osa.projekat_osa.repository.AccountRepository;
+import com.ftn.osa.projekat_osa.repository.AttachmentRepository;
 import com.ftn.osa.projekat_osa.repository.FolderRepository;
 import com.ftn.osa.projekat_osa.repository.MessageRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.MailServiceInterface;
@@ -38,6 +40,9 @@ public class MailService implements MailServiceInterface {
     @Autowired
     RuleServiceInterface ruleService;
 
+    @Autowired
+    AttachmentRepository attachmentRepository;
+
     @Override
     public Message sendMessage(Message message) throws ResourceNotFoundException, MessagingException {
         Optional<Account> optionalAccount =  accountRepository.findById(message.getAccount().getId());
@@ -46,6 +51,9 @@ public class MailService implements MailServiceInterface {
             MailUtility mailUtility = new MailUtility(account);
             mailUtility.sendMessage(message);
             message.setDateTime(LocalDateTime.now());
+            List<Attachment> attachments =  attachmentRepository.saveAll(message.getAttachments());
+            message.setAttachments(new HashSet<>(attachments));
+            message.setId(null);
             message = messageRepository.save(message);
             Optional<Folder> optionalFolder = accountRepository.getAccountSentFolder(account.getId());
             if (optionalFolder.isPresent()){
