@@ -3,6 +3,10 @@ package com.ftn.osa.projekat_osa.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ftn.osa.projekat_osa.android_dto.FolderDTO;
+import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
+import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
+import com.ftn.osa.projekat_osa.model.Folder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,5 +90,11 @@ public class RuleController {
         } else {
             return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping(value =  "/{accountId}/{folderId}")
+    public ResponseEntity<FolderDTO> executeRuleOnFolder(@PathVariable("accountId") Long accountId, @PathVariable("accountId") Long folderId) throws InvalidConditionException, InvalidOperationException {
+        Folder f = ruleService.executeRuleSet(accountId, folderId);
+        return ResponseEntity.ok(new FolderDTO(f));
     }
 }

@@ -127,7 +127,7 @@ public class RuleService implements RuleServiceInterface {
                         }).collect(Collectors.toList());
                         copyAttachments = attachmentRepository.saveAll(copyAttachments);
                         copyMessage.setAttachments(new HashSet<>(copyAttachments));
-
+                        copyMessage = messageRepository.save(copyMessage);
                         destinationFolder.getMessages().add(copyMessage);
                         folderRepository.save(destinationFolder);
                     }
