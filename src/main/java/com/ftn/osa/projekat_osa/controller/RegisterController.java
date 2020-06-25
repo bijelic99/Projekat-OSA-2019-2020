@@ -6,6 +6,8 @@ import com.ftn.osa.projekat_osa.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +22,16 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostMapping(consumes = "application/json")
     public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
         try {
-            userDTO.setPassword( org.apache.commons.codec.digest.DigestUtils.sha256Hex(userDTO.getPassword()));
-            Optional<User> userOptional = userService.registerUser(userDTO.getJpaEntity());
+            userDTO.setPassword( passwordEncoder.encode(userDTO.getPassword()));
+            User u = userDTO.getJpaEntity();
+            u.setPassword(passwordEncoder.encode(u.getPassword()));
+            Optional<User> userOptional = userService.registerUser(u);
             ResponseEntity<UserDTO> responseEntity;
             if (userOptional.isPresent())
                 responseEntity = new ResponseEntity<UserDTO>(new UserDTO(userOptional.get()), HttpStatus.OK);

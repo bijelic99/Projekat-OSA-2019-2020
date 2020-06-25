@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +35,18 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping(value = "/", consumes = "application/json")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> userCred){
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> userCred) throws Exception {
             String username = userCred.get("username");
             String password = userCred.get("password");
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
+            try {
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(username, password)
+                );
+            }
+            catch (BadCredentialsException e) {
+                throw new Exception("Incorrect uname or pwd");
+            }
 
             final UserDetails userDetails =  userDetailsService.loadUserByUsername(username);
 
