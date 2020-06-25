@@ -33,4 +33,6 @@ public interface AccountServiceInterface {
     Rule addAccountRule(Long accountId, Rule rule) throws ResourceNotFoundException;
 
     Set<Rule> getAccountRules(Long accountId) throws ResourceNotFoundException;
+
+    Set<Account> getUserAccounts(Long userId);
 }

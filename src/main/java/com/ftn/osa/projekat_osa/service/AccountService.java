@@ -130,4 +130,9 @@ public class AccountService implements AccountServiceInterface {
         }
         else throw new ResourceNotFoundException("Account not found");
     }
+
+    @Override
+    public Set<Account> getUserAccounts(Long userId) {
+        return accountRepository.getUserAccounts(userId);
+    }
 }

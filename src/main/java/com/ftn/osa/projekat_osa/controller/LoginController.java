@@ -35,6 +35,9 @@ public class LoginController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(consumes = "application/json")
     public ResponseEntity<?> login(@RequestBody Map<String, String> userCred) throws Exception {
             String username = userCred.get("username");
@@ -51,9 +54,12 @@ public class LoginController {
             final UserDetails userDetails =  userDetailsService.loadUserByUsername(username);
 
             final String jwt = jwtUtil.generateToken(userDetails);
-            Map<String, String> token = new HashMap<>();
-            token.put("token", jwt);
-        return ResponseEntity.ok(token);
+            Map<String, Object> response = new HashMap<>();
+            User u = userService.getUserByUsername(username).get();
+            u.setPassword(null);
+            response.put("user", new UserDTO(u));
+            response.put("token", jwt);
+        return ResponseEntity.ok(response);
     }
 
 

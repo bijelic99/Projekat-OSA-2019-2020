@@ -1,15 +1,18 @@
 package com.ftn.osa.projekat_osa.controller;
 
+import com.ftn.osa.projekat_osa.android_dto.AccountDTO;
 import com.ftn.osa.projekat_osa.android_dto.ContactDTO;
 import com.ftn.osa.projekat_osa.android_dto.TagDTO;
 import com.ftn.osa.projekat_osa.android_dto.UserDTO;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongPasswordException;
+import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Contact;
 import com.ftn.osa.projekat_osa.model.Tag;
 import com.ftn.osa.projekat_osa.model.User;
 import com.ftn.osa.projekat_osa.service.ContactService;
 import com.ftn.osa.projekat_osa.service.UserService;
+import com.ftn.osa.projekat_osa.service.serviceInterface.AccountServiceInterface;
 import com.ftn.osa.projekat_osa.service.serviceInterface.ContactServiceInterface;
 import com.ftn.osa.projekat_osa.service.serviceInterface.TagServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,9 @@ public class UserController {
 
     @Autowired
     private TagServiceInterface tagService;
+
+    @Autowired
+    private AccountServiceInterface accountServiceInterface;
 
     @PutMapping(value = "/{id}/changePassword")
     public ResponseEntity<Object> changePassword(@PathVariable(value = "id") Long id, @RequestBody Map<String, String> data) {
@@ -85,6 +91,12 @@ public class UserController {
     public ResponseEntity<TagDTO> addUserTag(@PathVariable(value = "id") Long id, @RequestBody TagDTO tag){
         Tag tag1 = tagService.addUserTag(id, tag.getJpaEntity());
         return  new ResponseEntity<>(new TagDTO(tag1), HttpStatus.OK);
+    }
+
+    @GetMapping("{id}/accounts")
+    public ResponseEntity<Set<AccountDTO>> getUserAccounts(@PathVariable(value = "id") Long id){
+        Set<Account> accounts = accountServiceInterface.getUserAccounts(id);
+        return ResponseEntity.ok(accounts.stream().map(account -> new AccountDTO(account)).collect(Collectors.toSet()));
     }
 
 }
