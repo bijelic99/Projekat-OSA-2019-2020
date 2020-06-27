@@ -48,7 +48,7 @@ public class LoginController {
                 );
             }
             catch (BadCredentialsException e) {
-                throw new Exception("Incorrect uname or pwd");
+                return ResponseEntity.notFound().build();
             }
 
             final UserDetails userDetails =  userDetailsService.loadUserByUsername(username);

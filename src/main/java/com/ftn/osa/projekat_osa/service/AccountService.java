@@ -4,11 +4,9 @@ import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
 import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
 import com.ftn.osa.projekat_osa.exceptions.WrongProtocolException;
-import com.ftn.osa.projekat_osa.model.Account;
-import com.ftn.osa.projekat_osa.model.Folder;
-import com.ftn.osa.projekat_osa.model.Message;
-import com.ftn.osa.projekat_osa.model.Rule;
+import com.ftn.osa.projekat_osa.model.*;
 import com.ftn.osa.projekat_osa.repository.AccountRepository;
+import com.ftn.osa.projekat_osa.repository.UserRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +34,9 @@ public class AccountService implements AccountServiceInterface {
     @Autowired
     RuleServiceInterface ruleService;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Override
     public List<Account> getAll() {
         return accountRepository.findAll();
@@ -58,9 +59,10 @@ public class AccountService implements AccountServiceInterface {
         inboxFolder.setName("Inbox");
         inboxFolder = folderServiceInterface.save(inboxFolder);
 
-        Set<Message> messages = mailServiceInterface.getAllMessages(account.getId());
-        inboxFolder.getMessages().addAll(messages);
-        inboxFolder = folderServiceInterface.save(inboxFolder);
+        //Set<Message> messages = mailServiceInterface.getAllMessages(account.getId());
+        //inboxFolder.getMessages().addAll(messages);
+        //inboxFolder = folderServiceInterface.save(inboxFolder);
+
 
         account.getAccountFolders().add(inboxFolder);
 
@@ -76,6 +78,15 @@ public class AccountService implements AccountServiceInterface {
 
 
         return accountRepository.save(account);
+    }
+
+    @Override
+    public Account addUserAccount(Account account, Long userId) throws MessagingException, InvalidConditionException, InvalidOperationException, WrongProtocolException {
+        account = add(account);
+        User user = userRepository.getOne(userId);
+        user.getUserAccounts().add(account);
+        userRepository.save(user);
+        return account;
     }
 
     @Override

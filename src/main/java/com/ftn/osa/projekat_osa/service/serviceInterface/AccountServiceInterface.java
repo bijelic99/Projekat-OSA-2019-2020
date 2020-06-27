@@ -35,4 +35,6 @@ public interface AccountServiceInterface {
     Set<Rule> getAccountRules(Long accountId) throws ResourceNotFoundException;
 
     Set<Account> getUserAccounts(Long userId);
+
+    Account addUserAccount(Account account, Long userId) throws MessagingException, InvalidConditionException, InvalidOperationException, WrongProtocolException;
 }

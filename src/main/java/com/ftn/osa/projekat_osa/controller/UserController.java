@@ -4,8 +4,7 @@ import com.ftn.osa.projekat_osa.android_dto.AccountDTO;
 import com.ftn.osa.projekat_osa.android_dto.ContactDTO;
 import com.ftn.osa.projekat_osa.android_dto.TagDTO;
 import com.ftn.osa.projekat_osa.android_dto.UserDTO;
-import com.ftn.osa.projekat_osa.exceptions.ResourceNotFoundException;
-import com.ftn.osa.projekat_osa.exceptions.WrongPasswordException;
+import com.ftn.osa.projekat_osa.exceptions.*;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Contact;
 import com.ftn.osa.projekat_osa.model.Tag;
@@ -20,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -91,6 +91,12 @@ public class UserController {
     public ResponseEntity<TagDTO> addUserTag(@PathVariable(value = "id") Long id, @RequestBody TagDTO tag){
         Tag tag1 = tagService.addUserTag(id, tag.getJpaEntity());
         return  new ResponseEntity<>(new TagDTO(tag1), HttpStatus.OK);
+    }
+
+    @PostMapping("{id}/accounts")
+    public ResponseEntity<AccountDTO> addUserAccount(@PathVariable(value = "id") Long id, @RequestBody AccountDTO accountDTO) throws MessagingException, InvalidConditionException, InvalidOperationException, WrongProtocolException {
+        Account account = accountServiceInterface.addUserAccount(accountDTO.getJpaEntity(), id);
+        return ResponseEntity.ok(new AccountDTO(account));
     }
 
     @GetMapping("{id}/accounts")
