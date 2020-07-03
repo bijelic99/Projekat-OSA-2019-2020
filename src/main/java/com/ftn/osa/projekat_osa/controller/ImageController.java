@@ -23,7 +23,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = ImageController.mappingPath)
 public class ImageController {
-    public static final String mappingPath = "/api/images";
+    public static final String mappingPath = "api/images";
 
     @Autowired
     private ImageServiceInterface imageService;

@@ -42,8 +42,8 @@ INSERT INTO contacts(id, display_name, email, first_name, last_name, note) VALUE
 
 --INSERT INTO messages(id, bcc, cc, content, _from, subject, _to, unread, account_id) VALUES(3, 'fake.petar.petrovic@gmail.com, mailtestib887@gmail.com', 'mailtestib887@gmail.com', 'Test email from OSA project', 'fake.petar.petrovic@gmail.com', 'Success? Fail? Hotel Trivago', 'mailtestib887@gmail.com', 1, 3);
 
-INSERT INTO attachments(id, data, mime_type, name) VALUES(1, 'data1', 'mime type1', 'name1');
-INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type2', 'name2');
+--INSERT INTO attachments(id, data, mime_type, name) VALUES(1, 'data1', 'mime type1', 'name1');
+--INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type2', 'name2');
 
 --INSERT INTO accounts_account_folders(account_id, account_folders_id) VALUES(1,1);
 
@@ -58,7 +58,7 @@ INSERT INTO attachments(id, data, mime_type, name) VALUES(2, 'data2', 'mime type
 --INSERT INTO messages_tags(message_id, tags_id) VALUES(1,3);
 --INSERT INTO messages_tags(message_id, tags_id) VALUES(2,4);
 
-INSERT INTO rules(id, _condition, operation, value, destination_folder_id) VALUES(1, 1, 2, 'value1', 1);
+--INSERT INTO rules(id, _condition, operation, value, destination_folder_id) VALUES(1, 1, 2, 'value1', 1);
 
 INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(1, 1);
 INSERT INTO users_user_contacts(user_id, user_contacts_id) VALUES(2, 2);

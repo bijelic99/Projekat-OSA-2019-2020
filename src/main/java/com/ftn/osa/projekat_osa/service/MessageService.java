@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -8,6 +9,7 @@ import java.util.stream.Stream;
 import com.ftn.osa.projekat_osa.model.Account;
 import com.ftn.osa.projekat_osa.model.Folder;
 import com.ftn.osa.projekat_osa.model.Tag;
+import com.ftn.osa.projekat_osa.repository.FolderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class MessageService implements MessageServiceInterface {
 
 	@Autowired
 	MessageRepository messageRepository;
+
+	@Autowired
+	FolderRepository folderRepository;
 	
 	@Override
 	public List<Message> getAll() {
@@ -38,6 +43,14 @@ public class MessageService implements MessageServiceInterface {
 
 	@Override
 	public Set<Message> remove(Long messageID) {
+		Optional<Folder> optional = folderRepository.getFolderThatContainsMessage(messageID);
+
+		if(optional.isPresent()){
+			Folder folder = optional.get();
+			folder.setMessages(folder.getMessages().stream().filter(message -> message.getId() != messageID).collect(Collectors.toSet()));
+			folderRepository.save(folder);
+		}
+
 		messageRepository.deleteById(messageID);
 		return null;
 	}

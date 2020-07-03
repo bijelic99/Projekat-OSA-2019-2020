@@ -100,4 +100,10 @@ public class MessageController {
 		Message message = mailServiceInterface.sendMessage(messageDTO.getJpaEntity());
 		return ResponseEntity.ok(new MessageDTO(message));
 	}
+
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deleteMessage(@PathVariable("id") Long messageId){
+		messageService.remove(messageId);
+		return ResponseEntity.ok().build();
+	}
 }

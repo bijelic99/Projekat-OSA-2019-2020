@@ -202,13 +202,14 @@ public class MailService implements MailServiceInterface {
             MailUtility mailUtility = new MailUtility(account);
             Set<Message> messages = mailUtility.getMessages();
             Set<Message> finalCurrentMessages = accountRepository.getAccountReceivedMessages(accountId);
-            Set<Message> newMessages = messages.stream()
+            Set<Message> newMessages = messages.stream().filter(message -> latestTimestamp != null ? message.getDateTime().isAfter(latestTimestamp) : true)
+                    .collect(Collectors.toSet());
+                    /*
                     .filter(message -> !finalCurrentMessages.parallelStream()
                             .reduce(false,
                                     (aBoolean, message1) -> aBoolean || (MessageComparatorByDateTime.compareObjects(message, message1) == 0),
                                     (aBoolean, aBoolean2) -> aBoolean || aBoolean2)
-                    )
-                    .collect(Collectors.toSet());
+                    )*/
             messages = new HashSet<>(messageRepository.saveAll(newMessages));
             List<Message> forIndexFolder = ruleService.executeRuleSetOnNewMessages(accountId, new ArrayList<>(newMessages));
             indexFolder.getMessages().addAll(forIndexFolder);
