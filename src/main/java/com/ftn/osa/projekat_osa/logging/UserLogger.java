@@ -1,5 +1,6 @@
 package com.ftn.osa.projekat_osa.logging;
 
+import com.ftn.osa.projekat_osa.android_dto.MessageDTO;
 import com.ftn.osa.projekat_osa.android_dto.UserDTO;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -45,5 +46,21 @@ public class UserLogger {
 
     }
 
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.MessageController.sendMessage(..))", returning = "returnValue")
+    public void logAfterSendMessage(JoinPoint joinPoint, ResponseEntity<MessageDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        MessageDTO newMessage = (MessageDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Message was successfully send ");
+        else logger.error("Message failed to send");
+    }
 
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.MessageController.moveMessage(..))")
+    public void logAfterMoveMessage(JoinPoint joinPoint, ResponseEntity<MessageDTO> returnValue){
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Message successfully moved");
+        else
+            logger.error("Message move failed");
+
+    }
 }
