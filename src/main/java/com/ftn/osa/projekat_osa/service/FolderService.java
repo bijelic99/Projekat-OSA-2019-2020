@@ -52,6 +52,10 @@ public class FolderService implements FolderServiceInterface {
 
     @Override
     public void remove(Long folderID) {
+        accountRepository.getAccountForFolder(folderID).ifPresent(account -> {
+            account.setAccountFolders(account.getAccountFolders().stream().filter(folder -> folder.getId() != folderID).collect(Collectors.toSet()));
+            accountRepository.save(account);
+        });
         folderRepository.deleteById(folderID);
     }
 

@@ -3,6 +3,7 @@ package com.ftn.osa.projekat_osa.service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ftn.osa.projekat_osa.model.User;
 import com.ftn.osa.projekat_osa.repository.UserRepository;
@@ -38,6 +39,10 @@ public class TagService implements TagServiceInterface {
 
     @Override
     public void remove(Long tagId) {
+        userRepository.findUserForTag(tagId).ifPresent(user -> {
+            user.setUserTags(user.getUserTags().stream().filter(ut -> ut.getId() != tagId).collect(Collectors.toSet()));
+            userRepository.save(user);
+        });
         tagRepository.deleteById(tagId);
     }
 

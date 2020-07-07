@@ -15,11 +15,11 @@ public class User extends JpaEntity {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Contact> userContacts;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Tag> userTags;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Account> userAccounts;
 
     public User(Long id, String username, String password, String firstName, String lastName, Set<Contact> userContacts, Set<Tag> userTags, Set<Account> userAccounts) {

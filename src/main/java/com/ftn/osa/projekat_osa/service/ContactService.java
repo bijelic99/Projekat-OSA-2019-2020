@@ -47,6 +47,10 @@ public class ContactService implements ContactServiceInterface {
 
     @Override
     public void remove(Long contactId) {
+        userRepository.findUserForContact(contactId).ifPresent(user -> {
+            user.setUserContacts(user.getUserContacts().stream().filter(uc -> uc.getId() != contactId).collect(Collectors.toSet()));
+            userRepository.save(user);
+        });
         contactRepository.deleteById(contactId);
     }
 

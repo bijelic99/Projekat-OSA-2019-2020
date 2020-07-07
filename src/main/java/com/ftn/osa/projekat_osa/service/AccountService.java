@@ -15,6 +15,7 @@ import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService implements AccountServiceInterface {
@@ -91,6 +92,10 @@ public class AccountService implements AccountServiceInterface {
 
     @Override
     public void remove(Long accountId) {
+        userRepository.findUserForAccount(accountId).ifPresent(user -> {
+            user.setUserAccounts(user.getUserAccounts().stream().filter(ua -> ua.getId() != accountId).collect(Collectors.toSet()));
+            userRepository.save(user);
+        });
         accountRepository.deleteById(accountId);
     }
 

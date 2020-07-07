@@ -11,12 +11,12 @@ import java.util.Set;
 public class Folder extends JpaEntity {
     @Column(nullable = false)
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Nullable
     private Folder parentFolder;
     @OneToMany(fetch = FetchType.LAZY)
     private Set<Message> messages;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentFolder")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parentFolder", cascade = CascadeType.ALL)
     private Set<Folder> folders;
 
     public Folder(Long id, String name, Folder parentFolder, Set<Message> messages, Set<Folder> folders) {

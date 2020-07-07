@@ -7,14 +7,11 @@ import java.util.stream.Collectors;
 import com.ftn.osa.projekat_osa.exceptions.InvalidConditionException;
 import com.ftn.osa.projekat_osa.exceptions.InvalidOperationException;
 import com.ftn.osa.projekat_osa.model.*;
-import com.ftn.osa.projekat_osa.repository.AttachmentRepository;
-import com.ftn.osa.projekat_osa.repository.FolderRepository;
-import com.ftn.osa.projekat_osa.repository.MessageRepository;
+import com.ftn.osa.projekat_osa.repository.*;
 import com.ftn.osa.projekat_osa.utillity.RuleHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ftn.osa.projekat_osa.repository.RuleRepository;
 import com.ftn.osa.projekat_osa.service.serviceInterface.RuleServiceInterface;
 
 @Service
@@ -31,6 +28,9 @@ public class RuleService implements RuleServiceInterface {
 
     @Autowired
     AttachmentRepository attachmentRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
 
     @Override
     public Rule getOne(Long ruleID) {
@@ -49,6 +49,10 @@ public class RuleService implements RuleServiceInterface {
 
     @Override
     public void remove(Long ruleID) {
+        accountRepository.getAccountForRule(ruleID).ifPresent(account -> {
+            account.setAccountRules(account.getAccountRules().stream().filter(rule -> rule.getId() != ruleID).collect(Collectors.toSet()));
+            accountRepository.save(account);
+        });
         ruleRepository.deleteById(ruleID);
     }
 

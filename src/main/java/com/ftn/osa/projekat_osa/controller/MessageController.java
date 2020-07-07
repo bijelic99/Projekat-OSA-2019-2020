@@ -1,6 +1,7 @@
 package com.ftn.osa.projekat_osa.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,13 +39,20 @@ public class MessageController {
 	private MailServiceInterface mailServiceInterface;
 	
 	@GetMapping
-	public ResponseEntity<List<MessageDTO>> getMessages() {
+	public ResponseEntity<List<MessageDTO>> getMessages(@RequestParam(required = false) String sortBy, @RequestParam(required = false) String tag ) {
 		List<Message> messages = messageService.getAll();
 		
 		List<MessageDTO> messagesDTO = new ArrayList<MessageDTO>();
 		for(Message mess : messages) {
 			messagesDTO.add(new MessageDTO(mess));
 		}
+		if(sortBy != null){
+			if(sortBy.equals("subject")) messagesDTO.sort(Comparator.comparing(MessageDTO::getSubject));
+			if(sortBy.equals("sender")) messagesDTO.sort(Comparator.comparing(o -> o.getFrom().getEmail()));
+			if(sortBy.equals("date")) messagesDTO.sort(Comparator.comparing(MessageDTO::getDateTime));
+		}
+		if(tag != null) messagesDTO = messagesDTO.stream().filter(message -> message.getTags().stream()
+				.filter(mailTag -> mailTag.getName().toLowerCase().equals(tag.toLowerCase())).count() > 0).collect(Collectors.toList());
 		return new ResponseEntity<List<MessageDTO>>(messagesDTO, HttpStatus.OK);
 	}
 	
