@@ -1,6 +1,8 @@
 package com.ftn.osa.projekat_osa.logging;
 
-import com.ftn.osa.projekat_osa.android_dto.UserDTO;
+import com.ftn.osa.projekat_osa.android_dto.*;
+import com.ftn.osa.projekat_osa.model.Folder;
+import com.ftn.osa.projekat_osa.model.Rule;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -45,5 +47,84 @@ public class UserLogger {
 
     }
 
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.MessageController.sendMessage(..))", returning = "returnValue")
+    public void logAfterSendMessage(JoinPoint joinPoint, ResponseEntity<MessageDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        MessageDTO newMessage = (MessageDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Message was successfully send ");
+        else logger.error("Message failed to send");
+    }
 
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.AccountController.updateAccount(..))", returning = "returnValue")
+    public void logAfterUpdateAccount(JoinPoint joinPoint, ResponseEntity<AccountDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        AccountDTO newAccount = (AccountDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Account with id of {} successfully updated", joinPoint.getArgs()[0]);
+        else logger.error("Account with id of {} failed to update", joinPoint.getArgs()[0]);
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.AccountController.addAccountRule(..))", returning = "returnValue")
+    public void logAfterAddAccountRule(JoinPoint joinPoint, ResponseEntity<RuleDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        RuleDTO newRule = (RuleDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Rule successfully added");
+        else logger.error("Rule  failed to added");
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.UserController.addUserContact(..))", returning = "returnValue")
+    public void logAfterAddContact(JoinPoint joinPoint, ResponseEntity<ContactDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        ContactDTO newContact = (ContactDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Contact successfully added");
+        else logger.error("Contact  failed to added");
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.FolderController.saveFolder(..))", returning = "returnValue")
+    public void logAfterAddFolder(JoinPoint joinPoint, ResponseEntity<FolderDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        FolderDTO newFolder = (FolderDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Folder successfully added");
+        else logger.error("Folder failed to added");
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.FolderController.updateFolder(..))", returning = "returnValue")
+    public void logAfterUpdateFolder(JoinPoint joinPoint, ResponseEntity<FolderDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        FolderDTO newFolder = (FolderDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Folder with id of {} successfully updated", joinPoint.getArgs()[0]);
+        else logger.error("Folder with id of {} failed to update", joinPoint.getArgs()[0]);
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.RuleController.saveRule(..))", returning = "returnValue")
+    public void logAfterAddRule(JoinPoint joinPoint, ResponseEntity<RuleDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        RuleDTO newRule = (RuleDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Rule successfully added");
+        else logger.error("Rule failed to added");
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.RuleController.updateRule(..))", returning = "returnValue")
+    public void logAfterUpdateRule(JoinPoint joinPoint, ResponseEntity<RuleDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        RuleDTO newRule = (RuleDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Rule with id of {} successfully updated", joinPoint.getArgs()[0]);
+        else logger.error("Rule with id of {} failed to update", joinPoint.getArgs()[0]);
+    }
+
+    @AfterReturning(value = "execution(* com..projekat_osa.controller.UserController.addUserTag(..))", returning = "returnValue")
+    public void logAfterAddTag(JoinPoint joinPoint, ResponseEntity<TagDTO> returnValue) {
+        Object[] joinPointArgs = joinPoint.getArgs();
+        TagDTO newTag = (TagDTO) joinPointArgs[0];
+        if (returnValue.getStatusCode() == HttpStatus.OK)
+            logger.info("Tag successfully added");
+        else logger.error("Tag failed to added");
+    }
 }
